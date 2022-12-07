@@ -1,9 +1,18 @@
 import express from "express"
-import { CryptoController, cryptoData } from "./crypto-controller.js"
+import CryptoController from "./crypto-controller.js"
 
-const router = express.Router()
+/**
+ * @file crypto-route.js
+ * @author 0xChristopher
+ * @brief 
+ */
 
-router.route("/update").get(CryptoController.apiUpdateDB)
-router.route("/").get((req, res) => res.send(cryptoData))
+const router = express.Router()             // Express router object
+
+router.route("/new").post(CryptoController.apiPostCryptos)
+router.route("/update").put(CryptoController.apiUpdateCryptos)
+router.route("/crypto/:id")
+    .get(CryptoController.apiGetCrypto)
+    .delete(CryptoController.apiDeleteCrypto)
 
 export default router

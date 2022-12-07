@@ -1,16 +1,22 @@
 import app from "./server.js"
 import mongodb from "mongodb"
 import { MONGO_PASSWORD, MONGO_USERNAME } from "../config.js"
-// import CryptoDAO from "./dao/cryptoDAO.js"
+import CryptoDAO from "./dao/cryptoDAO.js"
 
-const MongoClient = mongodb.MongoClient
-const mongoUsername = MONGO_USERNAME
-const mongoPassword = MONGO_PASSWORD
-const uri = `mongodb+srv://${mongoUsername}:${mongoPassword}@cluster0.2tcgcpm.mongodb.net/
-    ?retryWrites=true&w=majority`
+/**
+ * @file index.js
+ * @author 0xChristopher
+ * @brief 
+ */
 
-const port = 8000
+const MongoClient = mongodb.MongoClient                                 // MongoDB client object
+const mongoUsername = MONGO_USERNAME                                    // MongoDB username env variable
+const mongoPassword = MONGO_PASSWORD                                    // MongoDB password env variable
+const uri = `mongodb+srv://${mongoUsername}:${mongoPassword}`
+    + `@cluster0.2tcgcpm.mongodb.net/?retryWrites=true&w=majority`      // Database connection URI
+const port = 8000                                                       // Port to connect to database on
 
+// Connect to MongoDB
 MongoClient.connect(
     uri,
     {
@@ -18,11 +24,14 @@ MongoClient.connect(
         wtimeoutMS: 2500,
         useNewUrlParser: true
     })
-    .catch(err => {
+    .catch((err) => {
         console.error(err.stack)
         process.exit(1)
     })
-    .then(async () => {
+    .then(async (client) => {
+        await CryptoDAO.injectDB(client)
+
+        // Start listening for incoming requests
         app.listen(port, () => {
             console.log(`Web server listening on port ${port}`)
         })

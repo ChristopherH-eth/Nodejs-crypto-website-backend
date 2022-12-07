@@ -1,5 +1,11 @@
 import * as dotenv from "dotenv"
 
+/**
+ * @file config.js
+ * @author 0xChristopher
+ * @brief 
+ */
+
 dotenv.config()
 
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
