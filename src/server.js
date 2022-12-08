@@ -1,6 +1,6 @@
 import express from "express"
 import cors from "cors"
-import crypto from "./api/crypto-route.js"
+import crypto from "./routes/crypto-route.js"
 
 /**
  * @file server.js

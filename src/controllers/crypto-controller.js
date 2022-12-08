@@ -1,5 +1,6 @@
-import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL } from "../../config.js"
-import CryptoDAO from "../dao/cryptoDAO.js"
+import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL } from "../utils/config.js"
+import CryptoDAO from "../models/cryptoDAO.js"
+import Logger from "../utils/logger"
 
 /**
  * @file crypto-controller.js
@@ -49,7 +50,7 @@ class CryptoController
         }
         catch (e)
         {
-            console.log(`api, ${e}`)
+            Logger.log(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
@@ -102,7 +103,7 @@ class CryptoController
         }
         catch (e)
         {
-            console.log(`api, ${e}`)
+            Logger.log(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
@@ -124,19 +125,19 @@ class CryptoController
         }
         catch (e)
         {
-            console.log(`api, ${e}`)
+            Logger.log(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
 
     /**
-     * @brief The apiGetCrypto() function handles GET requests for specific cryptocurrency objects.
+     * @brief The apiGetCryptoById() function handles GET requests for specific cryptocurrency objects.
      * @param req 
      * @param res 
      * @param next 
      * @returns Returns an error if no cryptocurrency was found
      */
-    static async apiGetCrypto(req, res)
+    static async apiGetCryptoById(req, res)
     {
         try
         {
@@ -154,10 +155,39 @@ class CryptoController
         }
         catch (e)
         {
-            console.log(`api, ${e}`)
+            Logger.log(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
+
+    /**
+     * @brief The apiGetCryptos() function handles GET requests for all cryptocurrency objects.
+     * @param req 
+     * @param res 
+     * @param next 
+     * @returns Returns an error if no cryptocurrency was found
+     */
+     static async apiGetCryptos(req, res)
+     {
+         try
+         {
+             let crypto = await CryptoDAO.getCryptos()        // crypto object array returned by getCryptos()
+ 
+             // Check if we received a valid response
+             if (!crypto)
+             {
+                 res.status(404).json({error: "Not found"})
+                 return
+             }
+ 
+             res.json(crypto)
+         }
+         catch (e)
+         {
+             Logger.log(`api, ${e}`)
+             res.status(500).json({error: e})
+         }
+     }
 }
 
 /**

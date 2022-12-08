@@ -1,4 +1,5 @@
 import mongodb from "mongodb"
+import Logger from "../utils/logger"
 
 /**
  * @file cryptoDAO.js
@@ -29,7 +30,7 @@ class CryptoDAO
         }
         catch (e)
         {
-            console.error(`Unable to establish connection handles in userDAO: ${e}`)
+            Logger.error(`Unable to establish connection handles in userDAO: ${e}`)
         }
     }
 
@@ -62,7 +63,7 @@ class CryptoDAO
         } 
         catch (e) 
         {
-            console.error(`Unable to post cryptocurrency: ${e}`)
+            Logger.error(`Unable to post cryptocurrency: ${e}`)
             return {error: e}
         }
     }
@@ -84,19 +85,42 @@ class CryptoDAO
     }
 
     /**
-     * 
+     * @brief The getCryptos() function interacts with the database to get all stored cryptocurrency objects
+     *      and store them in an array.
+     * @return Returns an array of cryptocurrency objects or an error
      */
     static async getCryptos()
     {
-        // TODO: fill out function
+        try 
+        {
+            const cursor = await cryptocurrencies.find({})
+
+            return cursor.toArray()
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to get review: ${e}`)
+
+            return {error: e}
+        }
     }
 
     /**
-     * 
+     * @brief The getCryptoById() function queries the database for a specific cryptocurrency object.
+     * @param cryptoId The unique id of a cryptocurrency object
      */
-    static async getCryptoById()
+    static async getCryptoById(cryptoId)
     {
-        // TODO: fill out function
+        try 
+        {
+            return await cryptocurrencies.findOne({cryptoId: parseInt(cryptoId)})
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to get review: ${e}`)
+
+            return {error: e}
+        }
     }
 }
 

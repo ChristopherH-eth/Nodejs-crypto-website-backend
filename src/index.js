@@ -1,7 +1,8 @@
 import app from "./server.js"
 import mongodb from "mongodb"
-import { MONGO_PASSWORD, MONGO_USERNAME } from "../config.js"
-import CryptoDAO from "./dao/cryptoDAO.js"
+import { MONGO_PASSWORD, MONGO_USERNAME } from "./utils/config.js"
+import CryptoDAO from "./models/cryptoDAO.js"
+import Logger from "./utils/logger.js"
 
 /**
  * @file index.js
@@ -33,6 +34,6 @@ MongoClient.connect(
 
         // Start listening for incoming requests
         app.listen(port, () => {
-            console.log(`Web server listening on port ${port}`)
+            Logger.info(`Web server listening on port ${port}`)
         })
     })
