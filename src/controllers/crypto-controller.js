@@ -1,6 +1,6 @@
-import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL } from "../utils/config.js"
+import { fetchCryptoData } from "../utils/update.js"
 import CryptoDAO from "../models/cryptoDAO.js"
-import Logger from "../utils/logger"
+import Logger from "../utils/logger.js"
 
 /**
  * @file crypto-controller.js
@@ -8,18 +8,15 @@ import Logger from "../utils/logger"
  * @brief 
  */
 
-let latestListings = "/v1/cryptocurrency/listings/latest"       // CMC latest listings endpoint
-
 class CryptoController 
 {
     /**
      * @brief The apiPostCryptos() function handles POST requests consisting of an array of cryptocurrency
      *      JS objects.
-     * @param req 
-     * @param res 
-     * @param next 
+     * @param req Incoming request
+     * @param res Outgoing response
      */
-    static async apiPostCryptos(req, res)
+    static async apiPostCryptos(req, res, next)
     {
         try
         {
@@ -28,12 +25,13 @@ class CryptoController
 
             for (var i = 0; i < cryptoDataArray.length; i++)
             {
-                const cryptoId = cryptoDataArray[i].id
+                const cryptoId = parseInt(cryptoDataArray[i].id)
                 const name = cryptoDataArray[i].name
                 const symbol = cryptoDataArray[i].symbol
                 const maxSupply = cryptoDataArray[i].max_supply
                 const circulatingSupply = cryptoDataArray[i].circulating_supply
                 const totalSupply = cryptoDataArray[i].total_supply
+                const priceUSD = cryptoDataArray[i].quote.USD.price
 
                 // Attempt to add cryptocurrencies
                 const cryptoResponse = await CryptoDAO.addCrypto(
@@ -42,7 +40,8 @@ class CryptoController
                     symbol,
                     maxSupply,
                     circulatingSupply,
-                    totalSupply
+                    totalSupply,
+                    priceUSD
                 )
             }
 
@@ -50,7 +49,7 @@ class CryptoController
         }
         catch (e)
         {
-            Logger.log(`api, ${e}`)
+            Logger.error(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
@@ -58,41 +57,39 @@ class CryptoController
     /**
      * @brief The apiUpdateCryptos() function handles PUT requests consisting of an array of cryptocurrency
      *      JS objects.
-     * @param req 
-     * @param res 
-     * @param next 
+     * @param req Incoming request
+     * @param res Outgoing response
      */
-    static async apiUpdateCryptos(req, res)
+    static async apiUpdateCrypto(req, res, next)
     {
         try
         {
-            const cryptoData = await fetchCryptoData()                  // Crypto data returned by fetchCryptoData()
-            const cryptoDataArray = cryptoData.data                     // Crypto data array
+            const cryptoId = req.params.cryptoId
+            const name = req.body.name
+            const symbol = req.body.symbol
+            const maxSupply = req.body.maxSupply
+            const circulatingSupply = req.body.circulatingSupply
+            const totalSupply = req.body.totalSupply
+            const priceUSD = req.body.priceUSD
 
-            for (var i = 0; i < cryptoDataArray.length; i++)
+            // Attempt to update cryptocurrency value(s)
+            const cryptoResponse = await CryptoDAO.updateCrypto(
+                cryptoId,
+                name,
+                symbol,
+                maxSupply,
+                circulatingSupply,
+                totalSupply,
+                priceUSD
+            )
+
+            // Check if we received an error response
+            var {error} = cryptoResponse
+
+            if (error)
             {
-                const cryptoId = parseInt(req.params.cryptoId)
-                const name = req.body.name
-                const symbol = req.body.symbol
-                const maxSupply = req.body.maxSupply
-                const circulatingSupply = req.body.circulatingSupply
-                const totalSupply = req.body.totalSupply
-
-                // Attempt to update cryptocurrency value(s)
-                const cryptoResponse = await CryptoDAO.updateCrypto(
-                    cryptoId,
-                    name,
-                    symbol,
-                    maxSupply,
-                    circulatingSupply,
-                    totalSupply
-                )
-
-                // Check if we received an error response
-                var {error} = cryptoResponse
-
-                if (error)
-                    res.status(400).json({error})
+                res.status(400).json({error})
+                return
             }
 
             // Check if we updated successfully
@@ -103,45 +100,43 @@ class CryptoController
         }
         catch (e)
         {
-            Logger.log(`api, ${e}`)
+            Logger.error(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
 
     /**
      * @brief The apiDeleteCrypto() function handles DELETE requests for specific cryptocurrency objects.
-     * @param req 
-     * @param res 
-     * @param next 
+     * @param req Incoming request
+     * @param res Outgoing response
      */
-    static async apiDeleteCrypto(req, res)
+    static async apiDeleteCrypto(req, res, next)
     {
         try
         {
-            const cryptoId = req.params.id || {}                        // A cryptoId or an empty value
+            const cryptoId = req.params.cryptoId || {}                  // A cryptoId or an empty value
             const crypto = await CryptoDAO.deleteCrypto(cryptoId)       // Success or failure response of deleteCrypto()
 
             res.json({status: "success"})
         }
         catch (e)
         {
-            Logger.log(`api, ${e}`)
+            Logger.error(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
 
     /**
      * @brief The apiGetCryptoById() function handles GET requests for specific cryptocurrency objects.
-     * @param req 
-     * @param res 
-     * @param next 
+     * @param req Incoming request
+     * @param res Outgoing response
      * @returns Returns an error if no cryptocurrency was found
      */
-    static async apiGetCryptoById(req, res)
+    static async apiGetCryptoById(req, res, next)
     {
         try
         {
-            let cryptoId = req.params.id || {}                          // A cryptoId or an empty value
+            let cryptoId = req.params.cryptoId || {}                    // A cryptoId or an empty value
             let crypto = await CryptoDAO.getCryptoById(cryptoId)        // crypto object returned by getCryptoById()
 
             // Check if we received a valid crypto object
@@ -162,12 +157,11 @@ class CryptoController
 
     /**
      * @brief The apiGetCryptos() function handles GET requests for all cryptocurrency objects.
-     * @param req 
-     * @param res 
-     * @param next 
+     * @param req Incoming request
+     * @param res Outgoing response
      * @returns Returns an error if no cryptocurrency was found
      */
-     static async apiGetCryptos(req, res)
+     static async apiGetCryptos(req, res, next)
      {
          try
          {
@@ -188,24 +182,6 @@ class CryptoController
              res.status(500).json({error: e})
          }
      }
-}
-
-/**
- * @brief The fetchCryptoData() function fetches the top 100 cryptocurrencies by market cap.
- * @returns Returns an array of objects representing the top 100 cryptocurrencies
- */
-async function fetchCryptoData()
-{
-    return fetch(`${COINMARKETCAP_URL}${latestListings}`, {
-            headers: {
-                "X-CMC_PRO_API_KEY": COINMARKETCAP_API_KEY
-            },
-            params: {
-                sort: "market_cap",
-                limit: 100
-            }
-        })
-        .then((response) => response.json())
 }
 
 export default CryptoController

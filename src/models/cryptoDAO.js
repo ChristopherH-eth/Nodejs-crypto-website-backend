@@ -1,5 +1,5 @@
 import mongodb from "mongodb"
-import Logger from "../utils/logger"
+import Logger from "../utils/logger.js"
 
 /**
  * @file cryptoDAO.js
@@ -35,16 +35,17 @@ class CryptoDAO
     }
 
     /**
-     * @brief The addCrypto() function adds a cryptocurrency to the database
+     * @brief The addCrypto() function adds a cryptocurrency to the database.
      * @param cryptoId The id of the cryptocurrency
      * @param name Cryptocurrency name
      * @param symbol Cryptocurrency symbol
      * @param maxSupply Maximum supply of the token/coin
      * @param circulatingSupply Circulating supply of the token/coin
      * @param totalSupply Total supply of the token/coin
+     * @param priceUSD Price of the cryptocurrency in USD
      * @returns Returns whether the request was successful or not
      */
-    static async addCrypto(cryptoId, name, symbol, maxSupply, circulatingSupply, totalSupply)
+    static async addCrypto(cryptoId, name, symbol, maxSupply, circulatingSupply, totalSupply, priceUSD)
     {
         // Try to add the cryptocurrency to the database
         try 
@@ -55,7 +56,8 @@ class CryptoDAO
                 symbol: symbol,
                 maxSupply: maxSupply,
                 circulatingSupply: circulatingSupply,
-                totalSupply: totalSupply
+                totalSupply: totalSupply,
+                priceUSD: priceUSD
             }
 
             // Return success or failure
@@ -69,19 +71,65 @@ class CryptoDAO
     }
 
     /**
-     * 
+     * @brief The updateCrypto() function updates a cryptocurrency in the database.
+     * @param cryptoId The id of the cryptocurrency
+     * @param name Cryptocurrency name
+     * @param symbol Cryptocurrency symbol
+     * @param maxSupply Maximum supply of the token/coin
+     * @param circulatingSupply Circulating supply of the token/coin
+     * @param totalSupply Total supply of the token/coin
+     * @param priceUSD Price of the cryptocurrency in USD
+     * @returns Returns whether the request was successful or not
      */
-    static async updateCrypto()
+    static async updateCrypto(cryptoId, name, symbol, maxSupply, circulatingSupply, totalSupply, priceUSD)
     {
-        // TODO: fill out function
+        try 
+        {
+            const updateResponse = await cryptocurrencies.updateOne(
+                {$or:
+                    [
+                        {_id: ObjectId(cryptoId)},
+                        {cryptoId: cryptoId}
+                    ]
+                },
+                {$set: {name: name, 
+                    symbol: symbol,
+                    maxSupply: maxSupply,
+                    circulatingSupply: circulatingSupply,
+                    totalSupply: totalSupply,
+                    priceUSD: priceUSD
+                }}
+            )
+    
+            return updateResponse
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to update cryptocurrency: ${e}`)
+            return {error: e}
+        }
     }
 
     /**
-     * 
+     * @brief The deleteCrypto() function removes a cryptocurrency entry from the database by its
+     *      derived ObjectId.
+     * @param cryptoId The cryptocurrency's unique assigned identifier
+     * @return Returns the database response or an error to the controller
      */
-    static async deleteCrypto()
+    static async deleteCrypto(cryptoId)
     {
-        // TODO: fill out function
+        try 
+        {
+            const deleteResponse = await cryptocurrencies.deleteOne({_id: ObjectId(cryptoId)})
+        
+            return deleteResponse
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to delete crypto: ${e}`)
+
+            return {error: e}
+        }
     }
 
     /**
@@ -99,7 +147,7 @@ class CryptoDAO
         } 
         catch (e) 
         {
-            Logger.error(`Unable to get review: ${e}`)
+            Logger.error(`Unable to get cryptos: ${e}`)
 
             return {error: e}
         }
@@ -113,11 +161,11 @@ class CryptoDAO
     {
         try 
         {
-            return await cryptocurrencies.findOne({cryptoId: parseInt(cryptoId)})
+            return await cryptocurrencies.findOne({_id: ObjectId(cryptoId)})
         } 
         catch (e) 
         {
-            Logger.error(`Unable to get review: ${e}`)
+            Logger.error(`Unable to get crypto: ${e}`)
 
             return {error: e}
         }
