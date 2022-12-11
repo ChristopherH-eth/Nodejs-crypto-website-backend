@@ -1,7 +1,7 @@
 import app from "./server.js"
 import mongodb from "mongodb"
 import { MONGO_PASSWORD, MONGO_USERNAME } from "./utils/config.js"
-import CryptoDAO from "./models/cryptoDAO.js"
+import { injectDB } from "./database.js"
 import Logger from "./utils/logger.js"
 
 /**
@@ -30,7 +30,7 @@ MongoClient.connect(
         process.exit(1)
     })
     .then(async (client) => {
-        await CryptoDAO.injectDB(client)
+        await injectDB(client)
 
         // Start listening for incoming requests
         app.listen(port, () => {

@@ -9,7 +9,8 @@ import CryptoController from "../controllers/crypto-controller.js"
 
 const router = express.Router()                                         // Express router object
 
-router.route("/new").post(CryptoController.apiPostCryptos)              // POST route
+router.route("/new").post(CryptoController.apiPostCryptos)              // POST new cryptos route
+router.route("/new/meta").post(CryptoController.apiPostMetas)           // POST new metadata route
 router.route("/all").get(CryptoController.apiGetCryptos)                // GET all route
 router.route("/:cryptoId")
     .get(CryptoController.apiGetCryptoById)                             // GET by id route
