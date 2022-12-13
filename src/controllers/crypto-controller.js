@@ -6,7 +6,9 @@ import Logger from "../utils/logger.js"
 /**
  * @file crypto-controller.js
  * @author 0xChristopher
- * @brief 
+ * @brief This file is responsible for directing all cryptocurrency related API calls to the correct model
+ *      for handling. This is currently the default controller for both standard crypto data, as well as
+ *      crypto metadata.
  */
 
 class CryptoController 
@@ -168,6 +170,12 @@ class CryptoController
          }
      }
 
+    /**
+     * @brief The apiPostMetas() function handles POST requests consisting of an map of cryptocurrency
+     *      metadata JS objects.
+     * @param req Incoming request
+     * @param res Outgoing response
+     */
     static async apiPostMetas(req, res, next)
     {
         try

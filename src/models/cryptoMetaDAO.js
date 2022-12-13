@@ -5,7 +5,9 @@ import { database } from "../database.js"
 /**
  * @file cryptoMetaDAO.js
  * @author 0xChristopher
- * @brief 
+ * @brief The Crypto Meta Data Access Object handles interactions with cryptocurrency data, and responds to
+ *      the crypto-controller. Interactions include adding new cryptocurrency metadata, updating
+ *      metadata, as well as deleting, and retrieving cryptocurrency metadata information.
  */
 
 const ObjectId = mongodb.ObjectId                   // ObjectId for database entries

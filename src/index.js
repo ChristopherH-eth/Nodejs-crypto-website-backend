@@ -7,7 +7,8 @@ import Logger from "./utils/logger.js"
 /**
  * @file index.js
  * @author 0xChristopher
- * @brief 
+ * @brief This file is the entry point for the crypto website backend. It creates the connection to the
+ *      MongoDB database and ExpressJS, and begins listening for client requests.
  */
 
 const MongoClient = mongodb.MongoClient                                 // MongoDB client object

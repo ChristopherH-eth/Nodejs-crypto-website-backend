@@ -5,7 +5,7 @@ import crypto from "./routes/crypto-route.js"
 /**
  * @file server.js
  * @author 0xChristopher
- * @brief 
+ * @brief This file handles the default route creation and server object instantiation.
  */
 
 const app = express()                   // Express object

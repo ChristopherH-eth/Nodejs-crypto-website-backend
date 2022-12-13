@@ -1,7 +1,8 @@
 /**
  * @file database.js
  * @author 0xChristopher
- * @brief 
+ * @brief This file handles the database connection request from index.js. It checks to make sure we don't
+ *      already have a connection before attempting to connect to the MongoDB datbase.
  */
 
 let database
@@ -24,7 +25,7 @@ async function injectDB(conn)
     }
     catch (e)
     {
-        Logger.error(`Unable to establish connection handles in cryptoDAO: ${e}`)
+        Logger.error(`Unable to establish connection handles in database: ${e}`)
     }
 }
 

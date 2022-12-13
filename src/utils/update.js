@@ -1,4 +1,4 @@
-import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL } from "../utils/config.js"
+import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL, update } from "../utils/config.js"
 import { CryptoDAO } from "../models/cryptoDAO.js"
 import CryptoMetaDAO from "../models/cryptoMetaDAO.js"
 import Logger from "./logger.js"
@@ -17,12 +17,12 @@ var cryptoData = {}
 // Automatically update cryptocurrency price data every hour
 const priceUpdater = setInterval(async () => {
     await autoUpdateCryptos()
-}, 30000)   // 1 hour
+}, update.hour)   // 1 hour
 
 // Automatically update cryptocurrency metadata daily
 const metaUpdater = setInterval(async () => {
     await autoUpdateMetadata()
-}, 40000)   // 1 day
+}, update.day)   // 1 day
 
 /**
  * @brief The autoUpdateCryptos() function runs hourly to update the top 200 cryptocurrencies by market

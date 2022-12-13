@@ -5,7 +5,9 @@ import { database } from "../database.js"
 /**
  * @file cryptoDAO.js
  * @author 0xChristopher
- * @brief 
+ * @brief The Crypto Data Access Object handles interactions with cryptocurrency data, and responds to
+ *      the crypto-controller. Interactions include adding new cryptocurrencies, updating cryptocurrencies, 
+ *      as well as deleting, and retrieving cryptocurrency information.
  */
 
 const ObjectId = mongodb.ObjectId                   // ObjectId for database entries

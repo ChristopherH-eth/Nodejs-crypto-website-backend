@@ -1,7 +1,8 @@
 /**
  * @file logger.js
  * @author 0xChristopher
- * @brief 
+ * @brief This file is responsible for the Logger class, which is used to provide time stamped information
+ *      for use in debugging and testing.
  */
 
 class Logger
@@ -13,9 +14,11 @@ class Logger
      */
     static getDate()
     {
-        const currentDate = new Date()
-        const options = {hours: "long", weekday: "long", year: "numeric", month: "short", day: "numeric"};
-        const time = `${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`
+        const currentDate = new Date()                                      // Gets the current date/time
+        const options = {hours: "long", weekday: "long",                    // Date/time display options
+            year: "numeric", month: "short", day: "numeric"};
+        const time = `${currentDate.getHours()}:`                           // Date/time display format
+            + `${currentDate.getMinutes()}:${currentDate.getSeconds()}`
 
         return `${time} ${currentDate.toLocaleDateString("en-us", options)}`
     }
