@@ -1,5 +1,5 @@
 import { COINMARKETCAP_API_KEY, COINMARKETCAP_URL, update } from "../utils/config.js"
-import { CryptoDAO } from "../models/cryptoDAO.js"
+import CryptoDAO from "../models/cryptoDAO.js"
 import CryptoMetaDAO from "../models/cryptoMetaDAO.js"
 import Logger from "./logger.js"
 

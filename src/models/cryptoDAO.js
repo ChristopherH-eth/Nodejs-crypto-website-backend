@@ -159,6 +159,35 @@ class CryptoDAO
             return {error: e}
         }
     }
+
+    /**
+     * @brief The getCryptosByPage() function allows for paging of cryptocurrencies. It sends a request
+     *      to the database to retrieve the current limit of cryptocurrencies to display, the current
+     *      page the user is on, and sorts them by 'cmc_rank'.
+     * @param limit The number of cryptocurrencies per page
+     * @param page The current page
+     * @return Returns an array of cryptocurrency objects
+     */
+    static async getCryptosByPage(limit, page)
+    {
+        try
+        {
+            const cursor = await database.collection("cryptocurrencies").find({
+                cmc_rank: {
+                    $gte: (1 + (parseInt(limit) * (parseInt(page) - 1))),
+                    $lte: (parseInt(limit) + (parseInt(limit) * (parseInt(page) - 1)))
+                }
+            }).sort({cmc_rank: 1})
+
+            return cursor.toArray()
+        }
+        catch (e)
+        {
+            Logger.error(`Unable to get page: ${e}`)
+
+            return {error: e}
+        }
+    }
 }
 
-export { CryptoDAO }
+export default CryptoDAO

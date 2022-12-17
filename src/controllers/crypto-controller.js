@@ -1,5 +1,5 @@
 import { fetchCryptoData, fetchMetadata, cryptoData } from "../utils/update.js"
-import { CryptoDAO } from "../models/cryptoDAO.js"
+import CryptoDAO from "../models/cryptoDAO.js"
 import CryptoMetaDAO from "../models/cryptoMetaDAO.js"
 import Logger from "../utils/logger.js"
 
@@ -137,7 +137,7 @@ class CryptoController
         }
         catch (e)
         {
-            Logger.log(`api, ${e}`)
+            Logger.error(`api, ${e}`)
             res.status(500).json({error: e})
         }
     }
@@ -148,27 +148,58 @@ class CryptoController
      * @param res Outgoing response
      * @returns Returns an error if no cryptocurrency was found
      */
-     static async apiGetCryptos(req, res, next)
-     {
-         try
-         {
-             let crypto = await CryptoDAO.getCryptos()        // crypto object array returned by getCryptos()
- 
-             // Check if we received a valid response
-             if (!crypto)
-             {
-                 res.status(404).json({error: "Not found"})
-                 return
-             }
- 
-             res.json(crypto)
-         }
-         catch (e)
-         {
-             Logger.log(`api, ${e}`)
-             res.status(500).json({error: e})
-         }
-     }
+    static async apiGetCryptos(req, res, next)
+    {
+        try
+        {
+            let crypto = await CryptoDAO.getCryptos()        // crypto object array returned by getCryptos()
+
+            // Check if we received a valid response
+            if (!crypto)
+            {
+                res.status(404).json({error: "Not found"})
+                return
+            }
+
+            res.json(crypto)
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+    
+    /**
+     * @brief The apiGetCryptosByPage() function attempts to get a specified number of cryptocurrency
+     *      objects for the given page the user has navigated to.
+     * @param req Incoming request
+     * @param res Outgoing response
+     * @return Returns the requested array of cryptocurrency objects or an error
+     */
+    static async apiGetCryptosByPage(req, res, next)
+    {
+        try
+        {
+            let limit = req.params.limit
+            let page = req.params.page
+            let crypto = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
+
+            // Check if we received a valid response
+            if (!crypto)
+            {
+                res.status(404).json({error: "Not found"})
+                return
+            }
+
+            res.json(crypto)
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
 
     /**
      * @brief The apiPostMetas() function handles POST requests consisting of an map of cryptocurrency
