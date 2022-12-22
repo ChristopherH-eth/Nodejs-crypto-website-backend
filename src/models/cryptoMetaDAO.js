@@ -31,15 +31,81 @@ class CryptoMetaDAO
         catch (e) 
         {
             Logger.error(`Unable to post cryptocurrency: ${e}`)
+
             return {error: e}
         }
     }
 
+    /**
+     * @brief The updateMeta() function updates a cryptocurrency metadata in the database.
+     * @param id The id of the cryptocurrency metadata
+     * @param name Cryptocurrency name
+     * @param symbol Cryptocurrency symbol
+     * @param category
+     * @param description
+     * @param slug Cryptocurrency slug
+     * @param logo
+     * @param subreddit
+     * @param notice
+     * @param tags
+     * @param urls
+     * @param platform
+     * @param date_added
+     * @param twitter_username
+     * @param is_hidden
+     * @param date_launched
+     * @param contract_address
+     * @param self_reported_circulating_supply
+     * @param self_reported_tags
+     * @param self_reported_market_cap
+     * @returns Returns whether the request was successful or not
+     */
     static async updateMeta(metaDoc)
     {
-        // TODO: Fill out function
-        
-        return
+        try 
+        {
+            const updateResponse = await database.collection("metadata").updateOne(
+                {$or:
+                    [
+                        {_id: ObjectId(metaDoc.id)},
+                        {id: metaDoc.id}
+                    ]
+                },
+                {$set: {
+                    id: metaDoc.id,
+                    name: metaDoc.name,
+                    symbol: metaDoc.symbol,
+                    category: metaDoc.category,
+                    description: metaDoc.description,
+                    slug: metaDoc.slug,
+                    logo: metaDoc.logo,
+                    subreddit: metaDoc.subreddit,
+                    notice: metaDoc.notice,
+                    tags: metaDoc.tags,
+                    // [tag-names]: metaDoc.tag-names,      --currently causes error
+                    // [tag-groups]: metaDoc.tag-groups,    --currently causes error
+                    urls: metaDoc.urls,
+                    platform: metaDoc.platform,
+                    date_added: metaDoc.date_added,
+                    twitter_username: metaDoc.twitter_username,
+                    is_hidden: metaDoc.is_hidden,
+                    date_launched: metaDoc.date_launched,
+                    contract_address: metaDoc.contract_address,
+                    self_reported_circulating_supply: metaDoc.self_reported_circulating_supply,
+                    self_reported_tags: metaDoc.self_reported_tags,
+                    self_reported_market_cap: metaDoc.self_reported_market_cap
+                }},
+                {upsert: true}
+            )
+    
+            return updateResponse
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to update metadata: ${e}`)
+
+            return {error: e}
+        }
     }
 }
 

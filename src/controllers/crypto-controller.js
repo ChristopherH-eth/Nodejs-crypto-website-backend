@@ -123,13 +123,14 @@ class CryptoController
     {
         try
         {
-            let cryptoId = req.params.cryptoId || {}                    // A cryptoId or an empty value
-            let crypto = await CryptoDAO.getCryptoById(cryptoId)        // crypto object returned by getCryptoById()
+            const cryptoId = req.params.cryptoId || {}                    // A cryptoId or an empty value
+            const crypto = await CryptoDAO.getCryptoById(cryptoId)        // crypto object returned by getCryptoById()
 
             // Check if we received a valid crypto object
             if (!crypto)
             {
                 res.status(404).json({error: "Not found"})
+                
                 return
             }
 
@@ -152,12 +153,13 @@ class CryptoController
     {
         try
         {
-            let crypto = await CryptoDAO.getCryptos()        // crypto object array returned by getCryptos()
+            const crypto = await CryptoDAO.getCryptos()        // crypto object array returned by getCryptos()
 
             // Check if we received a valid response
             if (!crypto)
             {
                 res.status(404).json({error: "Not found"})
+
                 return
             }
 
@@ -181,18 +183,34 @@ class CryptoController
     {
         try
         {
-            let limit = req.params.limit
-            let page = req.params.page
-            let crypto = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
+            const limit = req.params.limit
+            const page = req.params.page
+            const crypto = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
 
             // Check if we received a valid response
             if (!crypto)
             {
                 res.status(404).json({error: "Not found"})
+
                 return
             }
 
             res.json(crypto)
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+
+    static async apiGetCryptoCount(req, res, next)
+    {
+        try
+        {
+            const cryptoCount = await CryptoDAO.getCryptoCount()
+
+            res.json(cryptoCount)
         }
         catch (e)
         {

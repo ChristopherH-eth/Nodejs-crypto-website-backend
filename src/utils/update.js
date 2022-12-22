@@ -73,15 +73,14 @@ async function autoUpdateMetadata()
 async function fetchCryptoData()
 {
     const latestListingsURL = "/v1/cryptocurrency/listings/latest"      // CMC latest listings endpoint
+    const limit = 1000                                                  // CMC limit parameter
+    const sort = "market_cap"                                           // CMC sort parameter
+    const params = `?limit=${limit}&sort=${sort}`
 
     // Crypto data API call to CMC
-    return fetch(`${COINMARKETCAP_URL}${latestListingsURL}`, {
+    return fetch(`${COINMARKETCAP_URL}${latestListingsURL}${params}`, {
             headers: {
                 "X-CMC_PRO_API_KEY": COINMARKETCAP_API_KEY
-            },
-            params: {
-                sort: "market_cap",
-                limit: 200
             }
         })
         .then((response) => response.json())

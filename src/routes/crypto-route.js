@@ -11,7 +11,7 @@ const router = express.Router()                                                 
 
 router.route("/new").post(CryptoController.apiPostCryptos)                      // POST new cryptos route
 router.route("/new/meta").post(CryptoController.apiPostMetas)                   // POST new metadata route
-router.route("/all").get(CryptoController.apiGetCryptos)                        // GET all route
+router.route("/all").get(CryptoController.apiGetCryptoCount)                    // GET total count route
 router.route("/pages/:page/:limit").get(CryptoController.apiGetCryptosByPage)   // GET page and limit route
 router.route("/:cryptoId")
     .get(CryptoController.apiGetCryptoById)                                     // GET by id route

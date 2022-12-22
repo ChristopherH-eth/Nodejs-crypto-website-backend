@@ -31,6 +31,7 @@ class CryptoDAO
         catch (e) 
         {
             Logger.error(`Unable to post cryptocurrency: ${e}`)
+
             return {error: e}
         }
     }
@@ -86,7 +87,8 @@ class CryptoDAO
                     tvl_ratio: cryptoDoc.tvl_ratio,
                     last_updated: cryptoDoc.last_updated,
                     quote: cryptoDoc.quote
-                }}
+                }},
+                {upsert: true}
             )
     
             return updateResponse
@@ -94,6 +96,7 @@ class CryptoDAO
         catch (e) 
         {
             Logger.error(`Unable to update cryptocurrency: ${e}`)
+
             return {error: e}
         }
     }
@@ -184,6 +187,27 @@ class CryptoDAO
         catch (e)
         {
             Logger.error(`Unable to get page: ${e}`)
+
+            return {error: e}
+        }
+    }
+
+    /**
+     * @brief The getCryptoCount() function requests a count of the number of cryptocurrency documents
+     *      in the database.
+     * @returns Returns the number of cryptocurrency documents in the database
+     */
+    static async getCryptoCount()
+    {
+        try
+        {
+            const countResponse = await database.collection("cryptocurrencies").count()
+
+            return countResponse
+        }
+        catch (e)
+        {
+            Logger.error(`Unable to get crypto count: ${e}`)
 
             return {error: e}
         }
