@@ -204,6 +204,12 @@ class CryptoController
         }
     }
 
+    /**
+     * @brief The apiGetCryptoCount() function attempts to get a count of the number of cryptocurrency 
+     *      documents in the database; used for paging.
+     * @param req Incoming request
+     * @param res Outgoing response
+     */
     static async apiGetCryptoCount(req, res, next)
     {
         try
@@ -239,6 +245,37 @@ class CryptoController
             }
 
             res.json({status: "success"})
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+
+    /**
+     * @brief The apiGetMetasByPage() function attempts to get a specified number of cryptocurrency
+     *      metadata objects for the given page the user has navigated to.
+     * @param req Incoming request
+     * @param res Outgoing response
+     * @return Returns the requested array of cryptocurrency metadata objects or an error
+     */
+    static async apiGetMetasByPage(req, res, next)
+    {
+        try
+        {
+            const cryptos = req.query.cryptos
+            const metadata = await CryptoMetaDAO.getMetasByPage(cryptos)        // crypto object array returned by getMetasByPage()
+
+            // Check if we received a valid response
+            if (!metadata)
+            {
+                res.status(404).json({error: "Not found"})
+
+                return
+            }
+
+            res.json(metadata)
         }
         catch (e)
         {

@@ -102,6 +102,40 @@ class CryptoDAO
     }
 
     /**
+     * @brief The updateLogoFromMetadata() function updates the cryptocurrency logo in the corresponding
+     *      cryptocurrency document in the database for convenient use when pulling data.
+     * @param id The id of the cryptocurrency
+     * @param logo The logo of the cryptocurrency
+     * @returns Returns whether the request was successful or not
+     */
+    static async updateLogoFromMetadata(cryptoDoc)
+    {
+        try 
+        {
+            const updateResponse = await database.collection("cryptocurrencies").updateOne(
+                {$or:
+                    [
+                        {_id: ObjectId(cryptoDoc.id)},
+                        {id: cryptoDoc.id}
+                    ]
+                },
+                {$set: {
+                    logo: cryptoDoc.logo
+                }},
+                {upsert: true}
+            )
+    
+            return updateResponse
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to update cryptocurrency: ${e}`)
+
+            return {error: e}
+        }
+    }
+
+    /**
      * @brief The deleteCrypto() function removes a cryptocurrency entry from the database by its
      *      derived ObjectId.
      * @param cryptoId The cryptocurrency's unique assigned identifier
@@ -151,6 +185,8 @@ class CryptoDAO
      */
     static async getCryptoById(cryptoId)
     {
+        Logger.info("Getting crypto by id: " + cryptoId)
+
         try 
         {
             return await database.collection("cryptocurrencies").findOne({_id: ObjectId(cryptoId)})

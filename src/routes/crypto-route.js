@@ -13,6 +13,7 @@ router.route("/new").post(CryptoController.apiPostCryptos)                      
 router.route("/new/meta").post(CryptoController.apiPostMetas)                   // POST new metadata route
 router.route("/all").get(CryptoController.apiGetCryptoCount)                    // GET total count route
 router.route("/pages/:page/:limit").get(CryptoController.apiGetCryptosByPage)   // GET page and limit route
+router.route("/meta/").get(CryptoController.apiGetMetasByPage)                  // GET metadata by crypto id
 router.route("/:cryptoId")
     .get(CryptoController.apiGetCryptoById)                                     // GET by id route
     .put(CryptoController.apiUpdateCrypto)                                      // PUT route

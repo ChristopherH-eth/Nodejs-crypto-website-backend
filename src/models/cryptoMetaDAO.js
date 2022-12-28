@@ -107,6 +107,66 @@ class CryptoMetaDAO
             return {error: e}
         }
     }
+
+    /**
+     * @brief The getMetasByPage() function allows for paging of cryptocurrency metadata. It sends a request
+     *      to the database to retrieve the current page's metadata and returns it to the frontend for
+     *      rendering.
+     * @param cryptos A string of cryptocurrency ids separated by commas
+     * @return Returns an array of cryptocurrency metadata objects
+     */
+    static async getMetasByPage(cryptos)
+    {
+        Logger.info("Getting metadata by page: " + cryptos)
+
+        try
+        {
+            let cryptoArray = []                            // Array of cryptocurrency ids
+            let metadataArray = []                          // Array of cryptocurrency metadata objects
+            let start = 0                                   // Starting index for substring search
+
+            // Find substrings while additional ids exist
+            while (true)
+            {
+                // Check if we've reached the last id; if so, push it onto array an break
+                if (cryptos.search(",") === -1)
+                {
+                    cryptoArray.push(cryptos)
+
+                    break
+                }
+                // There are additional ids to process
+                else
+                {
+                    const crypto = cryptos.slice(0, cryptos.search(","))
+                    start = cryptos.search(",") + 1
+                    cryptos = cryptos.slice(start)
+                    cryptoArray.push(crypto)
+                }
+            }
+
+            // Iterate over the id array and find matching metadata objects to return
+            for (var i = 0; i < cryptoArray.length; i++)
+            {
+                const metadata = await database.collection("metadata").findOne({
+                    id: parseInt(cryptoArray[i])
+                })
+
+                metadataArray.push({
+                    id: metadata.id,
+                    logo: metadata.logo
+                })
+            }
+
+            return metadataArray
+        }
+        catch (e)
+        {
+            Logger.error(`Unable to get page: ${e}`)
+
+            return {error: e}
+        }
+    }
 }
 
 export default CryptoMetaDAO

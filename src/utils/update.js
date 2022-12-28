@@ -25,7 +25,7 @@ const metaUpdater = setInterval(async () => {
 }, update.day)   // 1 day
 
 /**
- * @brief The autoUpdateCryptos() function runs hourly to update the top 200 cryptocurrencies by market
+ * @brief The autoUpdateCryptos() function runs hourly to update the top 1000 cryptocurrencies by market
  *      cap in the database.
  */
 async function autoUpdateCryptos()
@@ -45,7 +45,8 @@ async function autoUpdateCryptos()
 }
 
 /**
- * @brief The autoUpdateMetadata() function
+ * @brief The autoUpdateMetadata() function runs daily to update the top 1000 cryptocurrencies' metadata
+ *      by market cap in the database.
  */
 async function autoUpdateMetadata()
 {
@@ -60,15 +61,22 @@ async function autoUpdateMetadata()
         {
             // Attempt to update crypto metadata
             const metaResponse = await CryptoMetaDAO.updateMeta(metadataMap[cryptoData.data[i].id])
+            const cryptoResponse = await CryptoDAO.updateLogoFromMetadata(metadataMap[cryptoData.data[i].id])
         }
+    }
+    else
+    {
+        Logger.warn("No recent crypto data for metadata update")
+
+        return
     }
 
     Logger.info("Routine metadata update complete")
 }
 
 /**
- * @brief The fetchCryptoData() function fetches the top 200 cryptocurrencies by market cap.
- * @returns Returns an array of objects representing the top 200 cryptocurrencies
+ * @brief The fetchCryptoData() function fetches the top 1000 cryptocurrencies by market cap.
+ * @returns Returns an array of objects representing the top 1000 cryptocurrencies
  */
 async function fetchCryptoData()
 {
@@ -87,7 +95,8 @@ async function fetchCryptoData()
 }
 
 /**
- * @brief The fetchMetadata() function
+ * @brief The fetchMetadata() function fetches the matadata of the top 1000 cryptocurrencies by market cap.
+ * @return Returns a map of objects representing the metadata of the top 1000 cryptocurrencies
  */
 async function fetchMetadata()
 {
