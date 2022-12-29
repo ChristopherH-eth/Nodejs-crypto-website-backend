@@ -216,7 +216,7 @@ class CryptoDAO
                     $gte: (1 + (parseInt(limit) * (parseInt(page) - 1))),
                     $lte: (parseInt(limit) + (parseInt(limit) * (parseInt(page) - 1)))
                 }
-            }).sort({cmc_rank: 1})
+            }).sort({"quote.USD.market_cap": -1})
 
             return cursor.toArray()
         }

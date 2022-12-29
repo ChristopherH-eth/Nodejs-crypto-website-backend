@@ -81,7 +81,7 @@ async function autoUpdateMetadata()
 async function fetchCryptoData()
 {
     const latestListingsURL = "/v1/cryptocurrency/listings/latest"      // CMC latest listings endpoint
-    const limit = 1000                                                  // CMC limit parameter
+    const limit = 1100                                                  // CMC limit parameter (100 more than current front end display)
     const sort = "market_cap"                                           // CMC sort parameter
     const params = `?limit=${limit}&sort=${sort}`
 
