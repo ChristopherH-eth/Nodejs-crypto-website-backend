@@ -5,12 +5,16 @@
   "type": "module",
   "license": "MIT",
   "devDependencies": {
+    "chai": "^4.3.7",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongodb": "^4.12.1"
+    "mocha": "^10.2.0",
+    "mongodb": "^4.12.1",
+    "supertest": "^6.3.3"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "test": "mocha --exit"
   }
 }

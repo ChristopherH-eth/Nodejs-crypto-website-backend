@@ -10,6 +10,7 @@
 4. Routing --(To be added)
 5. Database --(To be added)
 6. Utilities --(To be added)
+7. Testing --(To be added)
 
 ## MVC Design
 

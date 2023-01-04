@@ -1,3 +1,5 @@
+import Logger from "./utils/logger.js"
+
 /**
  * @file database.js
  * @author 0xChristopher
@@ -5,7 +7,7 @@
  *      already have a connection before attempting to connect to the MongoDB datbase.
  */
 
-let database
+let database                    // Database connection
 
 /**
  * @brief The injectDB() function connects the client to the database.
