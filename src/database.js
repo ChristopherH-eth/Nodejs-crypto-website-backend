@@ -1,3 +1,6 @@
+import mongodb from "mongodb"
+import { MONGO_PASSWORD, MONGO_USERNAME } from "./utils/config.js"
+import { startListening } from "./server.js"
 import Logger from "./utils/logger.js"
 
 /**
@@ -7,7 +10,12 @@ import Logger from "./utils/logger.js"
  *      already have a connection before attempting to connect to the MongoDB datbase.
  */
 
-let database                    // Database connection
+const MongoClient = mongodb.MongoClient                                 // MongoDB client object
+const mongoUsername = MONGO_USERNAME                                    // MongoDB username env variable
+const mongoPassword = MONGO_PASSWORD                                    // MongoDB password env variable
+const uri = `mongodb+srv://${mongoUsername}:${mongoPassword}`
+    + `@cluster0.2tcgcpm.mongodb.net/?retryWrites=true&w=majority`      // Database connection URI
+let database                                                            // Database connection
 
 /**
  * @brief The injectDB() function connects the client to the database.
@@ -31,4 +39,31 @@ async function injectDB(conn)
     }
 }
 
-export { injectDB, database }
+/**
+ * @brief The connectToDB() function initializes a MongoClient, connects to the database, and once the
+ *      database connection is made, it tells the server to start listening for requests.
+ */
+async function connectToDBAndListen() {
+    // Connect to MongoDB
+    await MongoClient.connect(
+        uri,
+        {
+            maxPoolSize: 50,
+            wtimeoutMS: 2500,
+            useNewUrlParser: true
+        })
+        .catch((err) => {
+            Logger.error(err.stack)
+            process.exit(1)
+        })
+        .then((client) => {
+            injectDB(client)
+            Logger.info("Database connection open")
+        })
+        .then(() => {
+            // Start listening for requests
+            startListening()
+        })
+}
+
+export { connectToDBAndListen, database }

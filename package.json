@@ -15,6 +15,6 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "test": "mocha --exit"
+    "test": "mocha test/** --exit --timeout 5000"
   }
 }

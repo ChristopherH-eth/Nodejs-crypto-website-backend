@@ -1,12 +1,11 @@
-import { initializeWebServer } from "./server.js"
+import { connectToDBAndListen } from "./database.js"
 
 /**
  * @file index.js
  * @author 0xChristopher
  * @brief This file is the entry point for the crypto website backend. It creates the connection to the
- *      MongoDB database and ExpressJS, and begins listening for client requests through the 
- *      initializeWebServer() function.
+ *      MongoDB database and ExpressJS, and begins listening for client requests.
  */
 
-// Initialize the web server and connect to the database
-initializeWebServer()
+// Initialize the connection to the database and start listening for requests
+connectToDBAndListen()
