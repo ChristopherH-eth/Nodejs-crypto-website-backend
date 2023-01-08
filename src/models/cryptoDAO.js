@@ -183,13 +183,19 @@ class CryptoDAO
      * @brief The getCryptoById() function queries the database for a specific cryptocurrency object.
      * @param cryptoId The unique id of a cryptocurrency object
      */
-    static async getCryptoById(cryptoId)
+    static async getCryptoById(cryptoId, test)
     {
-        Logger.info("Getting crypto by id: " + cryptoId)
+        if (test = true)
+            Logger.info("TEST -- Getting crypto by id: " + cryptoId)
+        else
+            Logger.info("Getting crypto by id: " + cryptoId)
 
         try 
         {
-            return await database.collection("cryptocurrencies").findOne({_id: ObjectId(cryptoId)})
+            if (test = true)
+                return await database.collection("test_cryptocurrencies").findOne({_id: ObjectId(cryptoId)})
+            else
+                return await database.collection("cryptocurrencies").findOne({_id: ObjectId(cryptoId)})
         } 
         catch (e) 
         {

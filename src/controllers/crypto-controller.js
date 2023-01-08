@@ -123,8 +123,9 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.params.cryptoId || {}                    // A cryptoId or an empty value
-            const crypto = await CryptoDAO.getCryptoById(cryptoId)        // crypto object returned by getCryptoById()
+            const cryptoId = req.query.cryptoId || {}                           // A cryptoId or an empty value
+            const test = req.query.test || {}                                   // Test flag
+            const crypto = await CryptoDAO.getCryptoById(cryptoId, test)        // crypto object returned by getCryptoById()
 
             // Check if we received a valid crypto object
             if (!crypto)
@@ -183,8 +184,8 @@ class CryptoController
     {
         try
         {
-            const limit = req.params.limit
-            const page = req.params.page
+            const limit = req.query.limit                                       // Cryptocurrencies per page
+            const page = req.query.page                                         // Page number
             const crypto = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
 
             // Check if we received a valid response
@@ -214,7 +215,7 @@ class CryptoController
     {
         try
         {
-            const cryptoCount = await CryptoDAO.getCryptoCount()
+            const cryptoCount = await CryptoDAO.getCryptoCount()            // Total number of cryptocurrency documents
 
             res.json(cryptoCount)
         }

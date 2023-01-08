@@ -1,5 +1,5 @@
 import express from "express"
-import { ENDPOINTS } from "../utils/config.js"
+import { ENDPOINTS, TEST_ENDPOINTS } from "../utils/config.js"
 import CryptoController from "../controllers/crypto-controller.js"
 
 /**
@@ -10,6 +10,7 @@ import CryptoController from "../controllers/crypto-controller.js"
 
 const router = express.Router()                                         // Express router object
 
+// Production API Routes
 router.route(ENDPOINTS.cryptos)
     .post(CryptoController.apiPostCryptos)                              // POST new cryptos route
 router.route(ENDPOINTS.metas)
@@ -24,5 +25,9 @@ router.route(ENDPOINTS.cryptoById)
     .get(CryptoController.apiGetCryptoById)                             // GET by id route
     .put(CryptoController.apiUpdateCrypto)                              // PUT route
     .delete(CryptoController.apiDeleteCrypto)                           // DELETE route
+
+// Test Environment API Routes
+router.route(TEST_ENDPOINTS.cryptoById)
+    .get(CryptoController.apiGetCryptoById)
 
 export default router

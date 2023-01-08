@@ -16,17 +16,22 @@ const MONGO_PASSWORD = process.env.MONGO_PASSWORD
 
 // Base URL and API versions
 const URLS = {
-    apiV1: "/api/v1/crypto"
+    apiV1: "/api/v1"
 }
 
-// API endpoints
+// API Endpoints
 const ENDPOINTS = {
     cryptos: "/new",
-    metas: "/new/meta",
+    metas: "/new/metadata",
     cryptoCount: "/all",
-    cryptosByPage: "/pages/:page/:limit",
-    metasByPage: "/meta/",
-    cryptoById: "/:cryptoId"
+    cryptosByPage: "/pages/",
+    metasByPage: "/metadata/",
+    cryptoById: "/cryptocurrencies/"
+}
+
+// API Test Endpoints
+const TEST_ENDPOINTS = {
+    cryptoById: `${ENDPOINTS.cryptoById}?test=true`
 }
 
 // Update intervals
@@ -39,6 +44,7 @@ export {
     UPDATE,
     URLS,
     ENDPOINTS,
+    TEST_ENDPOINTS,
     COINMARKETCAP_API_KEY, 
     COINMARKETCAP_URL,
     MONGO_USERNAME,
