@@ -38,7 +38,7 @@ async function autoUpdateCryptos()
     for (var i = 0; i < cryptoDataArray.length; i++)
     {
         // Attempt to update cryptocurrencies
-        const cryptoResponse = await CryptoDAO.updateCrypto(cryptoDataArray[i])
+        const cryptoResponse = await CryptoDAO.updateCryptoById(cryptoDataArray[i])
     }
 
     Logger.info("Routine crypto update complete")

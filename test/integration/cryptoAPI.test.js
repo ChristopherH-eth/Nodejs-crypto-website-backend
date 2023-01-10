@@ -1,8 +1,7 @@
 import supertest from "supertest"
-import { assert, expect } from "chai"
 import { app } from "../../src/server.js"
 import { connectToDBAndListen, database } from "../../src/database.js"
-import { ENDPOINTS, TEST_ENDPOINTS, URLS } from "../../src/utils/config.js"
+import { TEST_ENDPOINTS, URLS } from "../../src/utils/config.js"
 
 /**
  * @file cryptoAPI.test.js
@@ -58,7 +57,7 @@ describe("cryptoAPI", function()
     {
         it("Should get a cryptocurrency from the database by id", (done) => {
             supertest(app)
-                .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=6395147b70996576de8fd974`)
+                .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=63bd7f509f05079788e8750f`)
                 .expect(200)
                 .expect(/"id":1/, done)
         })
@@ -82,9 +81,26 @@ describe("cryptoAPI", function()
         })
     })
 
-    describe("#updateCryptoById", function() {
-        it("Should update a cryptocurrency from the database by id", () => {
-            // TODO: Fill out tests
+    describe("#updateCryptoById", function() 
+    {
+        it("Should update a cryptocurrency from the database by id", (done) => {
+            supertest(app)
+                .put(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=63bd7f509f05079788e8750f`)
+                .send({name: "TestCoin"})
+                .expect(200)
+                .end(() => {
+                    supertest(app)
+                        .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=63bd7f509f05079788e8750f`)
+                        .expect(200)
+                        .expect(/"name":"TestCoin"/, done)
+            })
+        })
+
+        it("Should return bad request when no id is provided", (done) => {
+            supertest(app)
+                .put(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}`)
+                .send({name: "FailCoin"})
+                .expect(400, done)
         })
     })
 
@@ -92,7 +108,7 @@ describe("cryptoAPI", function()
     {
         it("Should delete a cryptocurrency from the database by id", (done) => {
             supertest(app)
-                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=6395147b70996576de8fd974`)
+                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=63bd7f509f05079788e8750f`)
                 .expect(200, done)
         })
 

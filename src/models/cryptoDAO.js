@@ -62,36 +62,74 @@ class CryptoDAO
     {
         try 
         {
-            const updateResponse = await database.collection("cryptocurrencies").updateOne(
-                {$or:
-                    [
-                        {_id: ObjectId(cryptoDoc.id)},
-                        {id: cryptoDoc.id}
-                    ]
-                },
-                {$set: {
-                    id: cryptoDoc.id,
-                    name: cryptoDoc.name,
-                    symbol: cryptoDoc.symbol,
-                    slug: cryptoDoc.slug,
-                    num_market_pairs: cryptoDoc.num_market_pairs,
-                    date_added: cryptoDoc.date_added,
-                    tags: cryptoDoc.tags,
-                    max_supply: cryptoDoc.max_supply,
-                    circulating_supply: cryptoDoc.circulating_supply,
-                    total_supply: cryptoDoc.total_supply,
-                    platform: cryptoDoc.platform,
-                    cmc_rank: cryptoDoc.cmc_rank,
-                    self_reported_circulating_supply: cryptoDoc.self_reported_circulating_supply,
-                    self_reported_market_cap: cryptoDoc.self_reported_market_cap,
-                    tvl_ratio: cryptoDoc.tvl_ratio,
-                    last_updated: cryptoDoc.last_updated,
-                    quote: cryptoDoc.quote
-                }},
-                {upsert: true}
-            )
-    
-            return updateResponse
+            if (cryptoDoc.testFlag)
+            {
+                Logger.test("Updating crypto by id: " + cryptoDoc.id)
+                const updateResponse = await database.collection("test_cryptocurrencies").updateOne(
+                    {$or:
+                        [
+                            {_id: ObjectId(cryptoDoc.id)},
+                            {id: cryptoDoc.id}
+                        ]
+                    },
+                    {$set: {
+                        id: cryptoDoc.id,
+                        name: cryptoDoc.name,
+                        symbol: cryptoDoc.symbol,
+                        slug: cryptoDoc.slug,
+                        num_market_pairs: cryptoDoc.num_market_pairs,
+                        date_added: cryptoDoc.date_added,
+                        tags: cryptoDoc.tags,
+                        max_supply: cryptoDoc.max_supply,
+                        circulating_supply: cryptoDoc.circulating_supply,
+                        total_supply: cryptoDoc.total_supply,
+                        platform: cryptoDoc.platform,
+                        cmc_rank: cryptoDoc.cmc_rank,
+                        self_reported_circulating_supply: cryptoDoc.self_reported_circulating_supply,
+                        self_reported_market_cap: cryptoDoc.self_reported_market_cap,
+                        tvl_ratio: cryptoDoc.tvl_ratio,
+                        last_updated: cryptoDoc.last_updated,
+                        quote: cryptoDoc.quote
+                    }},
+                    {upsert: true}
+                )
+        
+                return updateResponse
+            }
+            else
+            {
+                Logger.info("Updating crypto by id: " + cryptoDoc.id)
+                const updateResponse = await database.collection("cryptocurrencies").updateOne(
+                    {$or:
+                        [
+                            {_id: ObjectId(cryptoDoc.id)},
+                            {id: cryptoDoc.id}
+                        ]
+                    },
+                    {$set: {
+                        id: cryptoDoc.id,
+                        name: cryptoDoc.name,
+                        symbol: cryptoDoc.symbol,
+                        slug: cryptoDoc.slug,
+                        num_market_pairs: cryptoDoc.num_market_pairs,
+                        date_added: cryptoDoc.date_added,
+                        tags: cryptoDoc.tags,
+                        max_supply: cryptoDoc.max_supply,
+                        circulating_supply: cryptoDoc.circulating_supply,
+                        total_supply: cryptoDoc.total_supply,
+                        platform: cryptoDoc.platform,
+                        cmc_rank: cryptoDoc.cmc_rank,
+                        self_reported_circulating_supply: cryptoDoc.self_reported_circulating_supply,
+                        self_reported_market_cap: cryptoDoc.self_reported_market_cap,
+                        tvl_ratio: cryptoDoc.tvl_ratio,
+                        last_updated: cryptoDoc.last_updated,
+                        quote: cryptoDoc.quote
+                    }},
+                    {upsert: true}
+                )
+        
+                return updateResponse
+            }
         } 
         catch (e) 
         {
@@ -146,7 +184,7 @@ class CryptoDAO
     {
         try 
         {
-            if (testFlag = true)
+            if (testFlag)
             {
                 Logger.test("Deleting crypto by id: " + cryptoId)
                 const deleteResponse = await database.collection("test_cryptocurrencies")
@@ -181,7 +219,7 @@ class CryptoDAO
     {
         try 
         {
-            if (testFlag = true)
+            if (testFlag)
             {
                 Logger.test("Retrieving all cryptocurrency documents")
                 const cursor = await database.collection("test_cryptocurrencies").find({})
@@ -214,7 +252,7 @@ class CryptoDAO
     {
         try 
         {
-            if (testFlag = true)
+            if (testFlag)
             {
                 Logger.test("Getting crypto by id: " + cryptoId)
 
@@ -274,7 +312,7 @@ class CryptoDAO
     {
         try
         {
-            if (testFlag = true)
+            if (testFlag)
             {
                 Logger.test("Counting cryptocurrency documents")
                 const countResponse = await database.collection("test_cryptocurrencies").count()

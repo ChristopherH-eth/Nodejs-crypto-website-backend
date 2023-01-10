@@ -77,40 +77,28 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.params.cryptoId
-            const name = req.body.name
-            const symbol = req.body.symbol
-            const maxSupply = req.body.maxSupply
-            const circulatingSupply = req.body.circulatingSupply
-            const totalSupply = req.body.totalSupply
-            const priceUSD = req.body.priceUSD
-
-            // Attempt to update cryptocurrency value(s)
-            const cryptoResponse = await CryptoDAO.updateCryptoById(
-                cryptoId,
-                name,
-                symbol,
-                maxSupply,
-                circulatingSupply,
-                totalSupply,
-                priceUSD
-            )
-
-            // Check if we received an error response
-            const {error} = cryptoResponse
-
-            if (error)
-            {
-                res.status(400).json({error})
-
-                return
+            const cryptoDoc = {
+                id: req.query.cryptoId || {},                                       // A cryptoId or an empty value
+                testFlag: req.query.test,                                           // Test flag
+                name: req.body.name
+                // symbol: req.body.symbol,
+                // maxSupply: req.body.maxSupply,
+                // circulatingSupply: req.body.circulatingSupply,
+                // totalSupply: req.body.totalSupply,
+                // priceUSD: req.body.priceUSD
             }
+            
+            const cryptoResponse = await CryptoDAO.updateCryptoById(cryptoDoc)      // Success or failure response of updateCryptoById()
 
-            // Check if we updated successfully
-            if (cryptoResponse === 0)
-                throw new Error("Unable to update crypto")
-
-            res.json({status: "success"})
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+            {
+                // Check if we updated successfully
+                if (cryptoResponse === 0)
+                    throw new Error("Unable to update crypto")
+                else
+                    res.json({status: "success"})
+            }
         }
         catch (e)
         {
@@ -128,12 +116,18 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId || {}                               // A cryptoId or an empty value
-            const testFlag = req.query.test || {}                                   // Test flag
-            const crypto = await CryptoDAO.deleteCryptoById(cryptoId, testFlag)     // Success or failure response of deleteCrypto()
+            const cryptoId = req.query.cryptoId || {}                                       // A cryptoId or an empty value
+            const testFlag = req.query.test                                                 // Test flag
+            const cryptoResponse = await CryptoDAO.deleteCryptoById(cryptoId, testFlag)     // Success or failure response of deleteCryptoById()
 
-            if (!await responseHandler(res, crypto))
-                res.json({status: "success"})
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+            {
+                if (cryptoResponse.deletedCount === 0)
+                    res.status(404).json({error: "Not found"})
+                else
+                    res.json({status: "success"})
+            }
         }
         catch (e)
         {
@@ -152,12 +146,13 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId || {}                               // A cryptoId or an empty value
-            const testFlag = req.query.test || {}                                   // Test flag
-            const crypto = await CryptoDAO.getCryptoById(cryptoId, testFlag)        // crypto object returned by getCryptoById()
+            const cryptoId = req.query.cryptoId || {}                                       // A cryptoId or an empty value
+            const testFlag = req.query.test                                                 // Test flag
+            const cryptoResponse = await CryptoDAO.getCryptoById(cryptoId, testFlag)        // crypto object returned by getCryptoById()
 
-            if (!await responseHandler(res, crypto))
-                res.json(crypto)
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+                res.json(cryptoResponse)
         }
         catch (e)
         {
@@ -176,18 +171,12 @@ class CryptoController
     {
         try
         {
-            const testFlag = req.query.test || {}                       // Test flag
-            const crypto = await CryptoDAO.getCryptos(testFlag)         // crypto object array returned by getCryptos()
+            const testFlag = req.query.test                                     // Test flag
+            const cryptoResponse = await CryptoDAO.getCryptos(testFlag)         // crypto object array returned by getCryptos()
 
-            // Check if we received a valid response
-            if (!crypto)
-            {
-                res.status(404).json({error: "Not found"})
-
-                return
-            }
-
-            res.json(crypto)
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+                res.json(cryptoResponse)
         }
         catch (e)
         {
@@ -207,19 +196,13 @@ class CryptoController
     {
         try
         {
-            const limit = req.query.limit                                       // Cryptocurrencies per page
-            const page = req.query.page                                         // Page number
-            const crypto = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
+            const limit = req.query.limit                                               // Cryptocurrencies per page
+            const page = req.query.page                                                 // Page number
+            const cryptoResponse = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
 
-            // Check if we received a valid response
-            if (!crypto)
-            {
-                res.status(404).json({error: "Not found"})
-
-                return
-            }
-
-            res.json(crypto)
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+                res.json(cryptoResponse)
         }
         catch (e)
         {
@@ -238,11 +221,12 @@ class CryptoController
     {
         try
         {
-            const testFlag = req.query.test || {}                               // Test flag
-            const cryptoCount = await CryptoDAO.getCryptoCount(testFlag)        // Total number of cryptocurrency documents
+            const testFlag = req.query.test                                         // Test flag
+            const cryptoResponse = await CryptoDAO.getCryptoCount(testFlag)         // Total number of cryptocurrency documents
 
-            if (!await responseHandler(res, cryptoCount))
-                res.json(cryptoCount)
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+                res.json(cryptoResponse)
         }
         catch (e)
         {
