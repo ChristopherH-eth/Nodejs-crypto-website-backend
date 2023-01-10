@@ -40,13 +40,13 @@ describe("cryptoAPI", function()
     })
 
     /**
-     * @brief Tests the /all endpoint
+     * @brief Tests the /all/count/ endpoint
      */
     describe("#getCryptoCount", function()
     {
         it("Should count the number of cryptocurrency documents in the database", (done) => {
             supertest(app)
-                .get(`${URLS.apiV1}${ENDPOINTS.cryptoCount}`)
+                .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoCount}`)
                 .expect(200, done)
         })
     })
@@ -67,6 +67,51 @@ describe("cryptoAPI", function()
             supertest(app)
                 .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=111111111111111111111111`)
                 .expect(404, done)
+        })
+
+        it("Should return bad request when an invalid id is provided", (done) => {
+            supertest(app)
+                .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=1`)
+                .expect(400, done)
+        })
+
+        it("Should return bad request when no id is provided", (done) => {
+            supertest(app)
+                .get(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}`)
+                .expect(400, done)
+        })
+    })
+
+    describe("#updateCryptoById", function() {
+        it("Should update a cryptocurrency from the database by id", () => {
+            // TODO: Fill out tests
+        })
+    })
+
+    describe("#deleteCryptoById", function() 
+    {
+        it("Should delete a cryptocurrency from the database by id", (done) => {
+            supertest(app)
+                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=6395147b70996576de8fd974`)
+                .expect(200, done)
+        })
+
+        it("Should return not found", (done) => {
+            supertest(app)
+                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=111111111111111111111111`)
+                .expect(404, done)
+        })
+
+        it("Should return bad request when an invalid id is provided", (done) => {
+            supertest(app)
+                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}&cryptoId=1`)
+                .expect(400, done)
+        })
+
+        it("Should return bad request when no id is provided", (done) => {
+            supertest(app)
+                .delete(`${URLS.apiV1}${TEST_ENDPOINTS.cryptoById}`)
+                .expect(400, done)
         })
     })
 })

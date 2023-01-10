@@ -21,16 +21,23 @@ const URLS = {
 
 // API Endpoints
 const ENDPOINTS = {
-    cryptos: "/new",
-    metas: "/new/metadata",
-    cryptoCount: "/all",
+    addCryptos: "/new/",
+    addMetadata: "/new/metadata/",
+    allCryptos: "/all/",
+    cryptoCount: "/all/count/",
     cryptosByPage: "/pages/",
-    metasByPage: "/metadata/",
+    metadataByPage: "/metadata/",
     cryptoById: "/cryptocurrencies/"
 }
 
 // API Test Endpoints
 const TEST_ENDPOINTS = {
+    addCryptos: `${ENDPOINTS.addCryptos}?test=true`,
+    addMetadata: `${ENDPOINTS.addMetadata}?test=true`,
+    allCryptos: `${ENDPOINTS.allCryptos}?test=true`,
+    cryptoCount: `${ENDPOINTS.cryptoCount}?test=true`,
+    cryptosByPage: `${ENDPOINTS.cryptosByPage}?test=true`,
+    metadataByPage: `${ENDPOINTS.metadataByPage}?test=true`,
     cryptoById: `${ENDPOINTS.cryptoById}?test=true`
 }
 

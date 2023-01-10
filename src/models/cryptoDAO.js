@@ -58,7 +58,7 @@ class CryptoDAO
      * @param quote.USD.price Price of the cryptocurrency in USD
      * @returns Returns whether the request was successful or not
      */
-    static async updateCrypto(cryptoDoc)
+    static async updateCryptoById(cryptoDoc)
     {
         try 
         {
@@ -139,16 +139,29 @@ class CryptoDAO
      * @brief The deleteCrypto() function removes a cryptocurrency entry from the database by its
      *      derived ObjectId.
      * @param cryptoId The cryptocurrency's unique assigned identifier
+     * @param testFlag Boolean used for integration/unit testing
      * @return Returns the database response or an error to the controller
      */
-    static async deleteCrypto(cryptoId)
+    static async deleteCryptoById(cryptoId, testFlag)
     {
         try 
         {
-            const deleteResponse = await database.collection("cryptocurrencies")
-                .deleteOne({_id: ObjectId(cryptoId)})
-        
-            return deleteResponse
+            if (testFlag = true)
+            {
+                Logger.test("Deleting crypto by id: " + cryptoId)
+                const deleteResponse = await database.collection("test_cryptocurrencies")
+                    .deleteOne({_id: ObjectId(cryptoId)})
+            
+                return deleteResponse
+            }
+            else
+            {
+                Logger.info("Deleting crypto by id: " + cryptoId)
+                const deleteResponse = await database.collection("cryptocurrencies")
+                    .deleteOne({_id: ObjectId(cryptoId)})
+            
+                return deleteResponse
+            }
         } 
         catch (e) 
         {
@@ -161,15 +174,27 @@ class CryptoDAO
     /**
      * @brief The getCryptos() function interacts with the database to get all stored cryptocurrency objects
      *      and store them in an array.
+     * @param testFlag Boolean used for integration/unit testing
      * @return Returns an array of cryptocurrency objects or an error
      */
-    static async getCryptos()
+    static async getCryptos(testFlag)
     {
         try 
         {
-            const cursor = await database.collection("cryptocurrencies").find({})
+            if (testFlag = true)
+            {
+                Logger.test("Retrieving all cryptocurrency documents")
+                const cursor = await database.collection("test_cryptocurrencies").find({})
 
-            return cursor.toArray()
+                return cursor.toArray()
+            }
+            else
+            {
+                Logger.info("Retrieving all cryptocurrency documents")
+                const cursor = await database.collection("cryptocurrencies").find({})
+
+                return cursor.toArray()
+            }
         } 
         catch (e) 
         {
@@ -182,20 +207,25 @@ class CryptoDAO
     /**
      * @brief The getCryptoById() function queries the database for a specific cryptocurrency object.
      * @param cryptoId The unique id of a cryptocurrency object
+     * @param testFlag Boolean used for integration/unit testing
+     * @return Returns a cryptocurrency object or an error
      */
-    static async getCryptoById(cryptoId, test)
+    static async getCryptoById(cryptoId, testFlag)
     {
-        if (test = true)
-            Logger.info("TEST -- Getting crypto by id: " + cryptoId)
-        else
-            Logger.info("Getting crypto by id: " + cryptoId)
-
         try 
         {
-            if (test = true)
+            if (testFlag = true)
+            {
+                Logger.test("Getting crypto by id: " + cryptoId)
+
                 return await database.collection("test_cryptocurrencies").findOne({_id: ObjectId(cryptoId)})
+            }
             else
+            {
+                Logger.info("Getting crypto by id: " + cryptoId)
+
                 return await database.collection("cryptocurrencies").findOne({_id: ObjectId(cryptoId)})
+            }
         } 
         catch (e) 
         {
@@ -237,15 +267,27 @@ class CryptoDAO
     /**
      * @brief The getCryptoCount() function requests a count of the number of cryptocurrency documents
      *      in the database.
+     * @param testFlag Boolean used for integration/unit testing
      * @returns Returns the number of cryptocurrency documents in the database
      */
-    static async getCryptoCount()
+    static async getCryptoCount(testFlag)
     {
         try
         {
-            const countResponse = await database.collection("cryptocurrencies").count()
+            if (testFlag = true)
+            {
+                Logger.test("Counting cryptocurrency documents")
+                const countResponse = await database.collection("test_cryptocurrencies").count()
 
-            return countResponse
+                return countResponse
+            }
+            else
+            {
+                Logger.info("Counting cryptocurrency documents")
+                const countResponse = await database.collection("cryptocurrencies").count()
+
+                return countResponse
+            }
         }
         catch (e)
         {

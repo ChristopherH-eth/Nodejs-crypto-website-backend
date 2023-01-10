@@ -24,7 +24,8 @@ class Logger
     }
 
     /**
-     * @brief The info function takes in a set of parameters and logs them to the console.
+     * @brief The info() function takes in a set of parameters and logs them to the console,
+     *      prepending 'INFO'.
      * @param {...any} params The information to be logged
      */
     static info = (...params) => {
@@ -33,7 +34,8 @@ class Logger
     }
 
     /**
-     * @brief The warn function takes in a set of parameters and logs them to the console.
+     * @brief The warn() function takes in a set of parameters and logs them to the console, 
+     *      prepending 'WARN'.
      * @param {...any} params The information to be logged
      */
     static warn = (...params) => {
@@ -42,12 +44,23 @@ class Logger
     }
 
     /**
-     * @brief The error function takes in a set of parameters and logs them as an error to the console.
+     * @brief The error() function takes in a set of parameters and logs them as an error to the console
+     *      prepending 'ERROR'.
      * @param {...any} params The error to be logged
      */
     static error = (...params) => {
         const date = `[${this.getDate()} ERROR]`
-        console.error(...params)
+        console.error(date, ...params)
+    }
+
+    /**
+     * @brief The test() function takes in a set of parameters and logs them to the console, 
+     *      prepending 'TEST'. 
+     * @param  {...any} params The information to be logged
+     */
+    static test = (...params) => {
+        const date = `[${this.getDate()} TEST]`
+        console.log(date, ...params)
     }
 }
 
