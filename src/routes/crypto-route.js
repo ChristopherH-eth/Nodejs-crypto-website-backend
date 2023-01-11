@@ -34,6 +34,8 @@ router.route(ENDPOINTS.metadataByPage)
 // Test Environment API Routes
 router.route(TEST_ENDPOINTS.cryptoCount)
     .get(CryptoController.apiGetCryptoCount)
+router.route(TEST_ENDPOINTS.cryptosByPage)
+    .get(CryptoController.apiGetCryptosByPage)
 router.route(TEST_ENDPOINTS.cryptoById)
     .get(CryptoController.apiGetCryptoById)
     .put(CryptoController.apiUpdateCryptoById)

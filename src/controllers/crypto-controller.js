@@ -78,7 +78,8 @@ class CryptoController
         try
         {
             const cryptoDoc = {
-                id: req.query.cryptoId || {},                                       // A cryptoId or an empty value
+                _id: req.query.cryptoId,                                            // A cryptoId ObjectId or an empty value
+                id: req.body.id,                                                    // A cryptocurrency CMC id
                 testFlag: req.query.test,                                           // Test flag
                 name: req.body.name
                 // symbol: req.body.symbol,
@@ -86,6 +87,14 @@ class CryptoController
                 // circulatingSupply: req.body.circulatingSupply,
                 // totalSupply: req.body.totalSupply,
                 // priceUSD: req.body.priceUSD
+            }
+
+            // Check for required parameters
+            if (!cryptoDoc._id && !cryptoDoc.id)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
             }
             
             const cryptoResponse = await CryptoDAO.updateCryptoById(cryptoDoc)      // Success or failure response of updateCryptoById()
@@ -116,8 +125,17 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId || {}                                       // A cryptoId or an empty value
+            const cryptoId = req.query.cryptoId                                             // A cryptoId or an empty value
             const testFlag = req.query.test                                                 // Test flag
+
+            // Check for required parameters
+            if (!cryptoId)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
+            }
+
             const cryptoResponse = await CryptoDAO.deleteCryptoById(cryptoId, testFlag)     // Success or failure response of deleteCryptoById()
 
             // Handle error responses
@@ -146,8 +164,17 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId || {}                                       // A cryptoId or an empty value
+            const cryptoId = req.query.cryptoId                                             // A cryptoId or an empty value
             const testFlag = req.query.test                                                 // Test flag
+
+            // Check for required parameters
+            if (!cryptoId)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
+            }
+
             const cryptoResponse = await CryptoDAO.getCryptoById(cryptoId, testFlag)        // crypto object returned by getCryptoById()
 
             // Handle error responses
@@ -196,9 +223,19 @@ class CryptoController
     {
         try
         {
-            const limit = req.query.limit                                               // Cryptocurrencies per page
-            const page = req.query.page                                                 // Page number
-            const cryptoResponse = await CryptoDAO.getCryptosByPage(limit, page)        // crypto object array returned by getCryptosByPage()
+            const limit = req.query.limit                                                       // Cryptocurrencies per page
+            const page = req.query.page                                                         // Page number
+            const testFlag = req.query.test                                                     // Test flag
+
+            // Check for required parameters
+            if (!limit || !page)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
+            }
+
+            const cryptoResponse = await CryptoDAO.getCryptosByPage(limit, page, testFlag)      // crypto object array returned by getCryptosByPage()
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
