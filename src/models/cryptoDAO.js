@@ -20,13 +20,27 @@ class CryptoDAO
      *      properties, refer to the updateCrypto() function.
      * @returns Returns whether the request was successful or not
      */
-    static async addCrypto(cryptoDoc)
+    static async addCrypto(cryptoDoc, testFlag)
     {
-        // Try to add the cryptocurrency to the database
+        // Collection to use
+        let collection
+
         try 
         {
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_cryptocurrencies"
+                Logger.test("Inserting " + cryptoDoc.name + " at id: " + cryptoDoc.id)
+            }
+            else
+            {
+                collection = "cryptocurrencies"
+                Logger.info("Inserting " + cryptoDoc.name + " at id: " + cryptoDoc.id)
+            }
+
             // Return success or failure
-            return await database.collection("cryptocurrencies").insertOne(cryptoDoc)
+            return await database.collection(collection).insertOne(cryptoDoc)
         } 
         catch (e) 
         {

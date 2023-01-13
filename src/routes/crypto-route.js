@@ -6,7 +6,7 @@ import MetadataController from "../controllers/metadata-controller.js"
 /**
  * @file crypto-route.js
  * @author 0xChristopher
- * @brief This file contains the HTTP request routes for cryptocurrency objects.
+ * @brief This file contains the HTTP request routes for production and testing endpoints.
  */
 
 const router = express.Router()                                         // Express router object
@@ -15,7 +15,7 @@ const router = express.Router()                                         // Expre
 router.route(ENDPOINTS.addCryptos)
     .post(CryptoController.apiPostCryptos)                              // POST new cryptos route
 router.route(ENDPOINTS.allCryptos)
-    .get(CryptoController.apiGetCryptoCount)                            // GET all crypto objects route
+    .get(CryptoController.apiGetCryptos)                                // GET all crypto objects route
 router.route(ENDPOINTS.cryptoCount)
     .get(CryptoController.apiGetCryptoCount)                            // GET total count route
 router.route(ENDPOINTS.cryptosByPage)
@@ -31,7 +31,11 @@ router.route(ENDPOINTS.addMetadata)
 router.route(ENDPOINTS.metadataByPage)
     .get(MetadataController.apiGetMetasByPage)                          // GET metadata by crypto id
 
-// Test Environment API Routes
+// Test Environment API Routes -- CryptoController
+router.route(TEST_ENDPOINTS.addCryptos)
+    .post(CryptoController.apiPostCryptos)
+router.route(TEST_ENDPOINTS.allCryptos)
+    .get(CryptoController.apiGetCryptos)
 router.route(TEST_ENDPOINTS.cryptoCount)
     .get(CryptoController.apiGetCryptoCount)
 router.route(TEST_ENDPOINTS.cryptosByPage)

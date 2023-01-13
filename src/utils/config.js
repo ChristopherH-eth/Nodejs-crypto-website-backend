@@ -3,7 +3,8 @@ import * as dotenv from "dotenv"
 /**
  * @file config.js
  * @author 0xChristopher
- * @brief This file handles the exporting of environment variables.
+ * @brief This file handles the exporting of environment variables and others that regularly occur throughout
+ *      the server.
  */
 
 dotenv.config()

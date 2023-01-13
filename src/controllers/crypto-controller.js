@@ -49,16 +49,24 @@ class CryptoController
     {
         try
         {
-            const cryptoData = await fetchCryptoData()                  // Crypto data returned by fetchCryptoData()
-            const cryptoDataArray = cryptoData.data                     // Crypto data array
+            const cryptoData = req.body                                                 // Crypto data
+            const testFlag = req.query.test                                             // Test flag
 
-            for (var i = 0; i < cryptoDataArray.length; i++)
+            // Check for required parameters
+            if (!cryptoData.id)
             {
-                // Attempt to add cryptocurrencies
-                const cryptoResponse = await CryptoDAO.addCrypto(cryptoDataArray[i])
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
             }
 
-            res.json({status: "success"})
+            const cryptoResponse = await CryptoDAO.addCrypto(cryptoData, testFlag)      // Success or failure response of addCrypto()
+
+            // Handle error responses
+            if (!await responseHandler(res, cryptoResponse))
+                res.json(cryptoResponse)
+            else
+                res.json({status: "success"})
         }
         catch (e)
         {
@@ -81,12 +89,22 @@ class CryptoController
                 _id: req.query.cryptoId,                                            // A cryptoId ObjectId or an empty value
                 id: req.body.id,                                                    // A cryptocurrency CMC id
                 testFlag: req.query.test,                                           // Test flag
-                name: req.body.name
-                // symbol: req.body.symbol,
-                // maxSupply: req.body.maxSupply,
-                // circulatingSupply: req.body.circulatingSupply,
-                // totalSupply: req.body.totalSupply,
-                // priceUSD: req.body.priceUSD
+                name: req.body.name,
+                symbol: req.body.symbol,
+                slug: req.body.slug,
+                num_market_pairs: req.body.num_market_pairs,
+                date_added: req.body.date_added,
+                tags: req.body.tags,
+                max_supply: req.body.max_supply,
+                circulating_supply: req.body.circulating_supply,
+                total_supply: req.body.total_supply,
+                platform: req.body.platform,
+                cmc_rank: req.body.cmc_rank,
+                self_reported_circulating_supply: req.body.self_reported_circulating_supply,
+                self_reported_market_cap: req.body.self_reported_market_cap,
+                tvl_ratio: req.body.tvl_ratio,
+                last_updated: req.body.last_updated,
+                quote: req.body.quote
             }
 
             // Check for required parameters
