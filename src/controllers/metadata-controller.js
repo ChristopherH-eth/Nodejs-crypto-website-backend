@@ -9,6 +9,34 @@ import Logger from "../utils/logger.js"
  *      for handling.
  */
 
+/**
+ * @brief The responseHandler() function checks data from a database operation and checks for error responses
+ *      to handle.
+ * @param res Outgoing response
+ * @param data The data to be checked
+ * @return Returns 'true' if an error response was handled
+ */
+async function responseHandler(res, data)
+{
+    // Check if we received a valid object
+    if (!data)
+    {
+        res.status(404).json({error: "Not found"})
+        
+        return true
+    }
+
+    // Check if we received an error response
+    const {error} = data
+
+    if (error)
+    {
+        res.status(400).json({error})
+
+        return true
+    }
+}
+
 class MetadataController
 {
     /**
@@ -17,20 +45,63 @@ class MetadataController
      * @param req Incoming request
      * @param res Outgoing response
      */
-    static async apiPostMetas(req, res, next)
+    static async apiPostMetadata(req, res, next)
     {
         try
         {
-            const metadata = await fetchMetadata()                  // Crypto metadata returned by fetchMetadata()
-            const metadataMap = metadata.data                       // Crypto metadata map
+            const testFlag = req.query.test                                     // Test flag
+            const metadata = req.body                                           // Crypto metadata
+            const metadataId = req.body.id                                      // Metadata id
 
-            for (var i = 0; i < cryptoData.data.length; i++)
+            // Check for required parameters
+            if (!metadataId)
             {
-                // Attempt to add crypto metadata
-                const metaResponse = await CryptoMetadataDAO.addMeta(metadataMap[cryptoData.data[i].id])
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
+            }
+            
+            // Success or failure response of addMetadata()
+            const metadataResponse = await CryptoMetadataDAO.addMetadata(metadata, testFlag)
+
+            // Handle error responses
+            if (!await responseHandler(res, metadataResponse))
+                res.json({status: "success"})
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+
+    /**
+     * @brief The apiUpdateMetadata() function attempts to update the metadata object of a cryptocurrency.
+     * @param req Incoming request
+     * @param res Outgoing response
+     */
+    static async apiUpdateMetadataById(req, res, next)
+    {
+        try
+        {
+            const testFlag = req.query.test                                     // Test flag
+            const metadata = req.body                                           // Crypto metadata
+            const metadataId = req.body.id                                      // Metadata id
+
+            // Check for required parameters
+            if (!metadataId)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
             }
 
-            res.json({status: "success"})
+            // Success or failure response of addMetadata()
+            const metadataResponse = await CryptoMetadataDAO.updateMetadataById(metadata, testFlag)
+
+            // Handle error responses
+            if (!await responseHandler(res, metadataResponse))
+                res.json({status: "success"})
         }
         catch (e)
         {
@@ -46,22 +117,62 @@ class MetadataController
      * @param res Outgoing response
      * @return Returns the requested array of cryptocurrency metadata objects or an error
      */
-    static async apiGetMetasByPage(req, res, next)
+    static async apiGetMetadataById(req, res, next)
     {
         try
         {
-            const cryptos = req.query.cryptos
-            const metadata = await CryptoMetadataDAO.getMetasByPage(cryptos)        // crypto object array returned by getMetasByPage()
-
-            // Check if we received a valid response
-            if (!metadata)
+            const cryptos = req.query.cryptos                           // String of cryptocurrency ids
+            const testFlag = req.query.test                             // Test flag
+            
+            // Check for required parameters
+            if (!cryptos)
             {
-                res.status(404).json({error: "Not found"})
+                res.status(400).json({error: "Missing required parameters"})
 
                 return
             }
 
-            res.json(metadata)
+            // Metadata object array returned by getMetasById()
+            const metadataResponse = await CryptoMetadataDAO.getMetadataById(cryptos, testFlag)
+
+            // Handle error responses
+            if (!await responseHandler(res, metadataResponse))
+                res.json(metadataResponse)
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+
+    /**
+     * @brief The apiDeleteMetadataById() function attempts to delete a metadata object from the database
+     *      via its id.
+     * @param req Incoming request
+     * @param res Outgoing response
+     */
+    static async apiDeleteMetadataById(req, res, next)
+    {
+        try
+        {
+            const testFlag = req.query.test                                             // Test flag
+            const metadataId = req.query.metadataId                                     // Crypto metadata id
+        
+            // Check for required parameters
+            if (!metadataId)
+            {
+                res.status(400).json({error: "Missing required parameters"})
+
+                return
+            }
+
+            // Success or failure response of addMetadata()
+            const metadataResponse = await CryptoMetadataDAO.deleteMetadataById(metadataId, testFlag)
+
+            // Handle error responses
+            if (!await responseHandler(res, metadataResponse))
+                res.json({status: "success"})
         }
         catch (e)
         {

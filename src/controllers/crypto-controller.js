@@ -18,7 +18,7 @@ import Logger from "../utils/logger.js"
  */
 async function responseHandler(res, data)
 {
-    // Check if we received a valid crypto object
+    // Check if we received a valid object
     if (!data)
     {
         res.status(404).json({error: "Not found"})
@@ -49,8 +49,8 @@ class CryptoController
     {
         try
         {
-            const cryptoData = req.body                                                 // Crypto data
-            const testFlag = req.query.test                                             // Test flag
+            const cryptoData = req.body                                         // Crypto data
+            const testFlag = req.query.test                                     // Test flag
 
             // Check for required parameters
             if (!cryptoData.id)
@@ -60,7 +60,8 @@ class CryptoController
                 return
             }
 
-            const cryptoResponse = await CryptoDAO.addCrypto(cryptoData, testFlag)      // Success or failure response of addCrypto()
+            // Success or failure response of addCrypto()
+            const cryptoResponse = await CryptoDAO.addCrypto(cryptoData, testFlag)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -115,7 +116,8 @@ class CryptoController
                 return
             }
             
-            const cryptoResponse = await CryptoDAO.updateCryptoById(cryptoDoc)      // Success or failure response of updateCryptoById()
+            // Success or failure response of updateCryptoById()
+            const cryptoResponse = await CryptoDAO.updateCryptoById(cryptoDoc)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -143,8 +145,8 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId                                             // A cryptoId or an empty value
-            const testFlag = req.query.test                                                 // Test flag
+            const cryptoId = req.query.cryptoId                             // A cryptoId or an empty value
+            const testFlag = req.query.test                                 // Test flag
 
             // Check for required parameters
             if (!cryptoId)
@@ -154,7 +156,8 @@ class CryptoController
                 return
             }
 
-            const cryptoResponse = await CryptoDAO.deleteCryptoById(cryptoId, testFlag)     // Success or failure response of deleteCryptoById()
+            // Success or failure response of deleteCryptoById()
+            const cryptoResponse = await CryptoDAO.deleteCryptoById(cryptoId, testFlag)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -182,8 +185,8 @@ class CryptoController
     {
         try
         {
-            const cryptoId = req.query.cryptoId                                             // A cryptoId or an empty value
-            const testFlag = req.query.test                                                 // Test flag
+            const cryptoId = req.query.cryptoId                             // A cryptoId or an empty value
+            const testFlag = req.query.test                                 // Test flag
 
             // Check for required parameters
             if (!cryptoId)
@@ -193,7 +196,8 @@ class CryptoController
                 return
             }
 
-            const cryptoResponse = await CryptoDAO.getCryptoById(cryptoId, testFlag)        // crypto object returned by getCryptoById()
+            // crypto object returned by getCryptoById()
+            const cryptoResponse = await CryptoDAO.getCryptoById(cryptoId, testFlag)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -217,7 +221,9 @@ class CryptoController
         try
         {
             const testFlag = req.query.test                                     // Test flag
-            const cryptoResponse = await CryptoDAO.getCryptos(testFlag)         // crypto object array returned by getCryptos()
+
+            // crypto object array returned by getCryptos()
+            const cryptoResponse = await CryptoDAO.getCryptos(testFlag)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -241,9 +247,9 @@ class CryptoController
     {
         try
         {
-            const limit = req.query.limit                                                       // Cryptocurrencies per page
-            const page = req.query.page                                                         // Page number
-            const testFlag = req.query.test                                                     // Test flag
+            const limit = req.query.limit                                   // Cryptocurrencies per page
+            const page = req.query.page                                     // Page number
+            const testFlag = req.query.test                                 // Test flag
 
             // Check for required parameters
             if (!limit || !page)
@@ -253,7 +259,8 @@ class CryptoController
                 return
             }
 
-            const cryptoResponse = await CryptoDAO.getCryptosByPage(limit, page, testFlag)      // crypto object array returned by getCryptosByPage()
+            // crypto object array returned by getCryptosByPage()
+            const cryptoResponse = await CryptoDAO.getCryptosByPage(limit, page, testFlag)
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))
@@ -277,7 +284,9 @@ class CryptoController
         try
         {
             const testFlag = req.query.test                                         // Test flag
-            const cryptoResponse = await CryptoDAO.getCryptoCount(testFlag)         // Total number of cryptocurrency documents
+
+            // Total number of cryptocurrency documents returned by getCryptoCount()
+            const cryptoResponse = await CryptoDAO.getCryptoCount(testFlag)         
 
             // Handle error responses
             if (!await responseHandler(res, cryptoResponse))

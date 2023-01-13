@@ -74,27 +74,6 @@ class CryptoDAO
      */
     static async updateCryptoById(cryptoDoc)
     {
-        // Information to update
-        const updateInfo = {
-            id: cryptoDoc.id,
-            name: cryptoDoc.name,
-            symbol: cryptoDoc.symbol,
-            slug: cryptoDoc.slug,
-            num_market_pairs: cryptoDoc.num_market_pairs,
-            date_added: cryptoDoc.date_added,
-            tags: cryptoDoc.tags,
-            max_supply: cryptoDoc.max_supply,
-            circulating_supply: cryptoDoc.circulating_supply,
-            total_supply: cryptoDoc.total_supply,
-            platform: cryptoDoc.platform,
-            cmc_rank: cryptoDoc.cmc_rank,
-            self_reported_circulating_supply: cryptoDoc.self_reported_circulating_supply,
-            self_reported_market_cap: cryptoDoc.self_reported_market_cap,
-            tvl_ratio: cryptoDoc.tvl_ratio,
-            last_updated: cryptoDoc.last_updated,
-            quote: cryptoDoc.quote
-        }
-
         // Collection to use
         let collection
 
@@ -110,6 +89,27 @@ class CryptoDAO
             {
                 collection = "cryptocurrencies"
                 Logger.info("Updating crypto by id: " + cryptoDoc.id + " or _id: " + cryptoDoc._id)
+            }
+
+            // Information to update
+            const updateInfo = {
+                id: cryptoDoc.id,
+                name: cryptoDoc.name,
+                symbol: cryptoDoc.symbol,
+                slug: cryptoDoc.slug,
+                num_market_pairs: cryptoDoc.num_market_pairs,
+                date_added: cryptoDoc.date_added,
+                tags: cryptoDoc.tags,
+                max_supply: cryptoDoc.max_supply,
+                circulating_supply: cryptoDoc.circulating_supply,
+                total_supply: cryptoDoc.total_supply,
+                platform: cryptoDoc.platform,
+                cmc_rank: cryptoDoc.cmc_rank,
+                self_reported_circulating_supply: cryptoDoc.self_reported_circulating_supply,
+                self_reported_market_cap: cryptoDoc.self_reported_market_cap,
+                tvl_ratio: cryptoDoc.tvl_ratio,
+                last_updated: cryptoDoc.last_updated,
+                quote: cryptoDoc.quote
             }
 
             const updateResponse = await database.collection(collection).updateOne(
@@ -193,8 +193,7 @@ class CryptoDAO
                 Logger.info("Deleting crypto by id: " + cryptoId)
             }
 
-            const deleteResponse = await database.collection(collection)
-                .deleteOne({_id: ObjectId(cryptoId)})
+            const deleteResponse = await database.collection(collection).deleteOne({_id: ObjectId(cryptoId)})
         
             return deleteResponse
         } 

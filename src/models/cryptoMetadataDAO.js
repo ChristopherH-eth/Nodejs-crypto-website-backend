@@ -20,13 +20,27 @@ class CryptoMetaDAO
      *      properties, refer to the updateMeta() function.
      * @returns Returns whether the request was successful or not
      */
-    static async addMeta(metaDoc)
+    static async addMetadata(metaDoc, testFlag)
     {
-        // Try to add the cryptocurrency to the database
+        // Collection to use
+        let collection
+        
         try 
         {
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_metadata"
+                Logger.test("Inserting " + metaDoc.name + " at id: " + metaDoc.id)
+            }
+            else
+            {
+                collection = "metadata"
+                Logger.info("Inserting " + metaDoc.name + " at id: " + metaDoc.id)
+            }
+
             // Return success or failure
-            return await database.collection("metadata").insertOne(metaDoc)
+            return await database.collection(collection).insertOne(metaDoc)
         } 
         catch (e) 
         {
@@ -60,11 +74,26 @@ class CryptoMetaDAO
      * @param self_reported_market_cap
      * @returns Returns whether the request was successful or not
      */
-    static async updateMeta(metaDoc)
+    static async updateMetadataById(metaDoc, testFlag)
     {
+        // Collection to use
+        let collection
+
         try 
         {
-            const updateResponse = await database.collection("metadata").updateOne(
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_metadata"
+                Logger.test("Updating metadata by id: " + metaDoc.id)
+            }
+            else
+            {
+                collection = "metadata"
+                Logger.info("Updating metadata by id: " + metaDoc.id)
+            }
+
+            const updateResponse = await database.collection(collection).updateOne(
                 {$or:
                     [
                         {_id: ObjectId(metaDoc.id)},
@@ -115,15 +144,28 @@ class CryptoMetaDAO
      * @param cryptos A string of cryptocurrency ids separated by commas
      * @return Returns an array of cryptocurrency metadata objects
      */
-    static async getMetasByPage(cryptos)
+    static async getMetadataById(cryptos, testFlag)
     {
-        Logger.info("Getting metadata by page: " + cryptos)
+        // Collection to use
+        let collection
 
         try
         {
             let cryptoArray = []                            // Array of cryptocurrency ids
             let metadataArray = []                          // Array of cryptocurrency metadata objects
             let start = 0                                   // Starting index for substring search
+
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_metadata"
+                Logger.test("Getting metadata by page: " + cryptos)
+            }
+            else
+            {
+                collection = "metadata"
+                Logger.info("Getting metadata by page: " + cryptos)
+            }
 
             // Find substrings while additional ids exist
             while (true)
@@ -148,21 +190,61 @@ class CryptoMetaDAO
             // Iterate over the id array and find matching metadata objects to return
             for (var i = 0; i < cryptoArray.length; i++)
             {
-                const metadata = await database.collection("metadata").findOne({
+                const metadataResponse = await database.collection(collection).findOne({
                     id: parseInt(cryptoArray[i])
                 })
 
-                metadataArray.push({
-                    id: metadata.id,
-                    logo: metadata.logo
-                })
+                if (metadataResponse)
+                {
+                    metadataArray.push({
+                        id: metadataResponse.id,
+                        logo: metadataResponse.logo
+                    })
+                }
             }
+
+            // If the array is empty return nothing
+            if (metadataArray.length === 0)
+                return
 
             return metadataArray
         }
         catch (e)
         {
             Logger.error(`Unable to get page: ${e}`)
+
+            return {error: e}
+        }
+    }
+
+    /**
+     * @brief The deleteMetadata() function
+     */
+    static async deleteMetadataById(metadataId, testFlag)
+    {
+        // Collection to use
+        let collection
+        
+        try 
+        {
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_metadata"
+                Logger.test("Deleting metadata at id: " + metadataId)
+            }
+            else
+            {
+                collection = "metadata"
+                Logger.info("Deleting metadata at id: " + metadataId)
+            }
+
+            // Return success or failure
+            return await database.collection(collection).deleteOne({id: metadataId})
+        } 
+        catch (e) 
+        {
+            Logger.error(`Unable to post cryptocurrency: ${e}`)
 
             return {error: e}
         }

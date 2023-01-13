@@ -27,7 +27,7 @@ const ENDPOINTS = {
     allCryptos: "/all/",
     cryptoCount: "/all/count/",
     cryptosByPage: "/pages/",
-    metadataByPage: "/metadata/",
+    metadataById: "/metadata/",
     cryptoById: "/cryptocurrencies/"
 }
 
@@ -38,7 +38,7 @@ const TEST_ENDPOINTS = {
     allCryptos: `${ENDPOINTS.allCryptos}?test=true`,
     cryptoCount: `${ENDPOINTS.cryptoCount}?test=true`,
     cryptosByPage: `${ENDPOINTS.cryptosByPage}?test=true`,
-    metadataByPage: `${ENDPOINTS.metadataByPage}?test=true`,
+    metadataById: `${ENDPOINTS.metadataById}?test=true`,
     cryptoById: `${ENDPOINTS.cryptoById}?test=true`
 }
 

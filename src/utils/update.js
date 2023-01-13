@@ -60,7 +60,7 @@ async function autoUpdateMetadata()
         for (var i = 0; i < cryptoData.data.length; i++)
         {
             // Attempt to update crypto metadata
-            const metaResponse = await CryptoMetaDAO.updateMeta(metadataMap[cryptoData.data[i].id])
+            const metaResponse = await CryptoMetaDAO.updateMetadataById(metadataMap[cryptoData.data[i].id])
             const cryptoResponse = await CryptoDAO.updateLogoFromMetadata(metadataMap[cryptoData.data[i].id])
         }
     }
