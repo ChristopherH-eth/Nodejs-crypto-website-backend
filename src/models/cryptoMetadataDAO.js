@@ -197,8 +197,16 @@ class CryptoMetaDAO
                 if (metadataResponse)
                 {
                     metadataArray.push({
+                        category: metadataResponse.category,
+                        description: metadataResponse.description,
                         id: metadataResponse.id,
-                        logo: metadataResponse.logo
+                        logo: metadataResponse.logo,
+                        name: metadataResponse.name,
+                        slug: metadataResponse.slug,
+                        subreddit: metadataResponse.subreddit,
+                        symbol: metadataResponse.symbol,
+                        tags: metadataResponse.tags,
+                        urls: metadataResponse.urls
                     })
                 }
             }
