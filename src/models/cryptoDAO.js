@@ -280,7 +280,7 @@ class CryptoDAO
                 )
             }
             else
-                return await database.collection("test_cryptocurrencies").findOne({id: parseInt(cryptoId)})
+                return await database.collection(collection).findOne({id: parseInt(cryptoId)})
         } 
         catch (e) 
         {
