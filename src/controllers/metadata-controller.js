@@ -1,6 +1,6 @@
-import { fetchMetadata, cryptoData } from "../utils/update.js"
 import CryptoMetadataDAO from "../models/cryptoMetadataDAO.js"
 import Logger from "../utils/logger.js"
+import { responseHandler } from "../utils/helpers.js"
 
 /**
  * @file metadata-controller.js
@@ -8,34 +8,6 @@ import Logger from "../utils/logger.js"
  * @brief This file is responsible for directing all metadata related API calls to the correct model
  *      for handling.
  */
-
-/**
- * @brief The responseHandler() function checks data from a database operation and checks for error responses
- *      to handle.
- * @param res Outgoing response
- * @param data The data to be checked
- * @return Returns 'true' if an error response was handled
- */
-async function responseHandler(res, data)
-{
-    // Check if we received a valid object
-    if (!data)
-    {
-        res.status(404).json({error: "Not found"})
-        
-        return true
-    }
-
-    // Check if we received an error response
-    const {error} = data
-
-    if (error)
-    {
-        res.status(400).json({error})
-
-        return true
-    }
-}
 
 class MetadataController
 {

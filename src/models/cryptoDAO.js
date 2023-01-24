@@ -39,8 +39,10 @@ class CryptoDAO
                 Logger.info("Inserting " + cryptoDoc.name + " at id: " + cryptoDoc.id)
             }
 
-            // Return success or failure
-            return await database.collection(collection).insertOne(cryptoDoc)
+            const cryptoResponse = await database.collection(collection).insertOne(cryptoDoc)
+
+            // Return response
+            return cryptoResponse
         } 
         catch (e) 
         {
@@ -123,6 +125,7 @@ class CryptoDAO
                 {upsert: true}
             )
     
+            // Return response
             return updateResponse
         } 
         catch (e) 
@@ -157,6 +160,7 @@ class CryptoDAO
                 {upsert: true}
             )
     
+            // Return response
             return updateResponse
         } 
         catch (e) 
@@ -195,6 +199,7 @@ class CryptoDAO
 
             const deleteResponse = await database.collection(collection).deleteOne({_id: ObjectId(cryptoId)})
         
+            // Return response
             return deleteResponse
         } 
         catch (e) 
@@ -361,6 +366,7 @@ class CryptoDAO
 
             const countResponse = await database.collection(collection).count()
 
+            // Return response
             return countResponse
         }
         catch (e)

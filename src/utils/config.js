@@ -14,6 +14,7 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 const COINMARKETCAP_URL = process.env.COINMARKETCAP_URL
 const MONGO_USERNAME = process.env.MONGO_USERNAME
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD
+const TOKEN_KEY = process.env.TOKEN_KEY
 
 // Base URL and API versions
 const URLS = {
@@ -28,7 +29,9 @@ const ENDPOINTS = {
     cryptoCount: "/all/count/",
     cryptosByPage: "/pages/",
     metadataById: "/metadata/",
-    cryptoById: "/cryptocurrencies/"
+    cryptoById: "/cryptocurrencies/",
+    registerUser: "/register/",
+    loginUser: "/login/"
 }
 
 // API Test Endpoints
@@ -39,7 +42,9 @@ const TEST_ENDPOINTS = {
     cryptoCount: `${ENDPOINTS.cryptoCount}?test=true`,
     cryptosByPage: `${ENDPOINTS.cryptosByPage}?test=true`,
     metadataById: `${ENDPOINTS.metadataById}?test=true`,
-    cryptoById: `${ENDPOINTS.cryptoById}?test=true`
+    cryptoById: `${ENDPOINTS.cryptoById}?test=true`,
+    registerUser: `${ENDPOINTS.registerUser}?test=true`,
+    loginUser: `${ENDPOINTS.loginUser}?test=true`
 }
 
 // Update intervals
@@ -56,5 +61,6 @@ export {
     COINMARKETCAP_API_KEY, 
     COINMARKETCAP_URL,
     MONGO_USERNAME,
-    MONGO_PASSWORD
+    MONGO_PASSWORD,
+    TOKEN_KEY
 }

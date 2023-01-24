@@ -2,6 +2,7 @@ import express from "express"
 import { ENDPOINTS } from "../utils/config.js"
 import CryptoController from "../controllers/crypto-controller.js"
 import MetadataController from "../controllers/metadata-controller.js"
+import UserController from "../controllers/user-controller.js"
 
 /**
  * @file crypto-route.js
@@ -32,5 +33,11 @@ router.route(ENDPOINTS.metadataById)
     .get(MetadataController.apiGetMetadataById)                         // GET metadatas by id route
     .put(MetadataController.apiUpdateMetadataById)                      // PUT metadata by id route
     .delete(MetadataController.apiDeleteMetadataById)                   // DELETE metadata by id route
+
+// API Routes -- UserController
+router.route(ENDPOINTS.registerUser)
+    .post(UserController.apiRegisterUser)                               // POST user registration
+router.route(ENDPOINTS.loginUser)
+    .post(UserController.apiLoginUser)                                  // POST user login
 
 export default router

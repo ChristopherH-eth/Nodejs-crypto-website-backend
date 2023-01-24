@@ -5,8 +5,8 @@ import { database } from "../database.js"
 /**
  * @file cryptoMetaDAO.js
  * @author 0xChristopher
- * @brief The Crypto Meta Data Access Object handles interactions with cryptocurrency data, and responds to
- *      the crypto-controller. Interactions include adding new cryptocurrency metadata, updating
+ * @brief The Crypto Metadata Data Access Object handles interactions with cryptocurrency data, and responds to
+ *      the metadata-controller. Interactions include adding new cryptocurrency metadata, updating
  *      metadata, as well as deleting, and retrieving cryptocurrency metadata information.
  */
 
@@ -39,8 +39,10 @@ class CryptoMetaDAO
                 Logger.info("Inserting " + metaDoc.name + " at id: " + metaDoc.id)
             }
 
-            // Return success or failure
-            return await database.collection(collection).insertOne(metaDoc)
+            const metadataResponse = await database.collection(collection).insertOne(metaDoc)
+
+            // Return response
+            return metadataResponse
         } 
         catch (e) 
         {
@@ -127,6 +129,7 @@ class CryptoMetaDAO
                 {upsert: true}
             )
     
+            // Return response
             return updateResponse
         } 
         catch (e) 
@@ -226,7 +229,9 @@ class CryptoMetaDAO
     }
 
     /**
-     * @brief The deleteMetadata() function
+     * @brief The deleteMetadata() function attempts to delete a metadata object from the database by its id.
+     * @param metadataId The id of the metadata object to be deleted
+     * @return Returns whether the deletion was successful or not
      */
     static async deleteMetadataById(metadataId, testFlag)
     {
@@ -247,8 +252,10 @@ class CryptoMetaDAO
                 Logger.info("Deleting metadata at id: " + metadataId)
             }
 
-            // Return success or failure
-            return await database.collection(collection).deleteOne({id: metadataId})
+            const deleteResponse = await database.collection(collection).deleteOne({id: metadataId})
+
+            // Return response
+            return deleteResponse
         } 
         catch (e) 
         {
