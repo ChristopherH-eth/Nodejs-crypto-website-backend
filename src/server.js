@@ -1,6 +1,8 @@
 import express from "express"
 import cors from "cors"
-import crypto from "./routes/crypto-route.js"
+import cookieSession from "cookie-session"
+import cookieParser from "cookie-parser"
+import router from "./routes/crypto-route.js"
 import Logger from "./utils/logger.js"
 
 /**
@@ -12,11 +14,24 @@ import Logger from "./utils/logger.js"
 const app = express()                                   // Express object
 const port = 8000                                       // Port to listen on
 
-app.use(cors())
+app.use(cors({origin: "http://localhost:3000"}))
 app.use(express.json())
 
+// Define cookie settings
+app.set("trust proxy", 1)
+
+app.use(cookieParser())
+app.use(cookieSession({
+    name: "session",
+    keys: ["key1", "key2"],
+
+    // Cookie options
+    maxAge: 24 * 60 * 60 * 1000,                        // 24 hours
+    httpOnly: false
+}))
+
 // Define default routes
-app.use("/api/v1", crypto)
+app.use("/api/v1", router)
 app.use("*", (req, res) => res.status(404).json({error: "Not found"}))
 
 /**

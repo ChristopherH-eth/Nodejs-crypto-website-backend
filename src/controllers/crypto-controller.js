@@ -1,6 +1,7 @@
 import CryptoDAO from "../models/cryptoDAO.js"
 import Logger from "../utils/logger.js"
 import { responseHandler } from "../utils/helpers.js"
+import { verifyToken } from "../utils/auth.js"
 
 /**
  * @file crypto-controller.js
