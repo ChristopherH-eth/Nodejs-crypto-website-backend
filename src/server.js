@@ -14,7 +14,11 @@ import Logger from "./utils/logger.js"
 const app = express()                                   // Express object
 const port = 8000                                       // Port to listen on
 
-app.use(cors({origin: "http://localhost:3000"}))
+// Define cors options
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}))
 app.use(express.json())
 
 // Define cookie settings
@@ -24,10 +28,7 @@ app.use(cookieParser())
 app.use(cookieSession({
     name: "session",
     keys: ["key1", "key2"],
-
-    // Cookie options
-    maxAge: 24 * 60 * 60 * 1000,                        // 24 hours
-    httpOnly: false
+    maxAge: 24 * 60 * 60 * 1000                         // 24 hour session expiration
 }))
 
 // Define default routes

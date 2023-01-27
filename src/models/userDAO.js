@@ -61,8 +61,8 @@ class UserDAO
 
                 const userResponse = await database.collection(collection).insertOne(userDoc)
 
-                // Return response
-                return userResponse
+                // Return response and token
+                return ({response: userResponse, token: token})
             }
             else
                 return ({error: "User exists"})
@@ -119,8 +119,8 @@ class UserDAO
                     }}
                 )
 
-                // Return response
-                return userResponse
+                // Return response and new token
+                return ({response: userResponse, token: token, user: user.firstName})
             }
             else
                 return ({error: "Invalid credentials"})
@@ -128,6 +128,49 @@ class UserDAO
         catch (e)
         {
             Logger.error(`Unable to login user: ${e}`)
+
+            return {error: e}
+        }
+    }
+
+    /**
+     * @brief The isLoggedIn() function checks whether the user is currently logged in or not through
+     *      use of a JWT token and an Express session.
+     * @param req Incoming request
+     * @return Returns true if they user currently has an open session and is logged in, or else returns
+     *      an error
+     */
+    static async isLoggedIn(req, testFlag)
+    {
+        // Collection to use
+        let collection
+
+        try
+        {
+            // Check which collection should be accessed
+            if (testFlag)
+            {
+                collection = "test_users"
+                Logger.test("Checking user logged in status: " + req.cookies.user)
+            }
+            else
+            {
+                collection = "users"
+                Logger.info("Checking user logged in status: " + req.cookies.user)
+            }
+
+            const user = await database.collection(collection).findOne({token: req.cookies.user})
+
+            if (req.session === null && user)
+                return {error: "Session has expired, please login"}
+            else if (!user)
+                return {error: "No session found, please login"}
+            else
+                return true
+        }
+        catch (e)
+        {
+            Logger.error(`Unable to check user logged in status: ${e}`)
 
             return {error: e}
         }

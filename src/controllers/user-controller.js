@@ -70,7 +70,32 @@ class UserController
 
             // Handle error responses
             if (!await responseHandler(res, userResponse))
-                res.status(200).json(userResponse)
+            {
+                req.session.user = userResponse.token
+                res.status(200).cookie("user", req.session.user).json({
+                    data: userResponse.response, 
+                    firstName: userResponse.user
+                })
+            }
+        }
+        catch (e)
+        {
+            Logger.error(`api, ${e}`)
+            res.status(500).json({error: e})
+        }
+    }
+
+    /**
+     * @brief The apiClearCookies() function ends the current user's session and clears their cookies.
+     * @param req Incoming request
+     * @param res Outgoing response
+     */
+    static async apiClearCookies(req, res, next)
+    {
+        try
+        {
+            req.session = null
+            res.clearCookie("user").json({message: "Cookie cleared"})
         }
         catch (e)
         {

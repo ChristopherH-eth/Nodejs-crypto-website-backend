@@ -39,5 +39,7 @@ router.route(ENDPOINTS.registerUser)
     .post(UserController.apiRegisterUser)                               // POST user registration
 router.route(ENDPOINTS.loginUser)
     .post(UserController.apiLoginUser)                                  // POST user login
+router.route(ENDPOINTS.cookies)
+    .get(UserController.apiClearCookies)                                // GET cookies
 
 export default router

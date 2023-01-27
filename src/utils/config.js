@@ -31,7 +31,8 @@ const ENDPOINTS = {
     metadataById: "/metadata/",
     cryptoById: "/cryptocurrencies/",
     registerUser: "/register/",
-    loginUser: "/login/"
+    loginUser: "/login/",
+    cookies: "/cookies/"
 }
 
 // API Test Endpoints
