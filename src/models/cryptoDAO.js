@@ -39,6 +39,7 @@ class CryptoDAO
                 Logger.info("Inserting " + cryptoDoc.name + " at id: " + cryptoDoc.id)
             }
 
+            // Attempt to add new cryptocurrency
             const cryptoResponse = await database.collection(collection).insertOne(cryptoDoc)
 
             // Return response
@@ -114,6 +115,7 @@ class CryptoDAO
                 quote: cryptoDoc.quote
             }
 
+            // Attempt to update cryptocurrency
             const updateResponse = await database.collection(collection).updateOne(
                 {$or:
                     [
@@ -147,6 +149,7 @@ class CryptoDAO
     {
         try 
         {
+            // Attempt to update cryptocurrency logo
             const updateResponse = await database.collection("cryptocurrencies").updateOne(
                 {$or:
                     [
@@ -197,6 +200,7 @@ class CryptoDAO
                 Logger.info("Deleting crypto by id: " + cryptoId)
             }
 
+            // Attempt to delete cryptocurrency
             const deleteResponse = await database.collection(collection).deleteOne({_id: ObjectId(cryptoId)})
         
             // Return response
@@ -235,6 +239,7 @@ class CryptoDAO
                 Logger.info("Retrieving all cryptocurrency documents")
             }
 
+            // Attempt to get all cryptocurrency objects
             const cursor = await database.collection(collection).find({})
 
             return cursor.toArray()
@@ -272,10 +277,11 @@ class CryptoDAO
                 Logger.info("Getting crypto by id: " + cryptoId)
             }
 
-            // Check if the cryptoId passed in is a valid ObjectId
+            // Check if the cryptoId passed in is a valid ObjectId, then use correct method to find
+            // cryptocurrency
             if (ObjectId.isValid(cryptoId))
             {
-                return await database.collection(collection).findOne(
+                const cryptoResponse = await database.collection(collection).findOne(
                     {$or:
                         [
                             {_id: ObjectId(cryptoId)},
@@ -283,9 +289,15 @@ class CryptoDAO
                         ]
                     }
                 )
+
+                return cryptoResponse
             }
             else
-                return await database.collection(collection).findOne({id: parseInt(cryptoId)})
+            {
+                const cryptoResponse = await database.collection(collection).findOne({id: parseInt(cryptoId)})
+
+                return cryptoResponse
+            }
         } 
         catch (e) 
         {
@@ -322,6 +334,7 @@ class CryptoDAO
                 Logger.info("Getting " + limit + " cryptos on page " + page)
             }
 
+            // Attempt to find cryptocurrencies on a specific page
             const cursor = await database.collection(collection).find({
                 cmc_rank: {
                     $gte: (1 + (parseInt(limit) * (parseInt(page) - 1))),
@@ -364,6 +377,7 @@ class CryptoDAO
                 Logger.info("Counting cryptocurrency documents")
             }
 
+            // Attempt to count the total number of cryptocurrency objects
             const countResponse = await database.collection(collection).count()
 
             // Return response

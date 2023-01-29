@@ -93,8 +93,8 @@ class MetadataController
     {
         try
         {
-            const cryptos = req.query.cryptos                           // String of cryptocurrency ids
-            const testFlag = req.query.test                             // Test flag
+            const cryptos = req.query.cryptos                               // String of cryptocurrency ids
+            const testFlag = req.query.test                                 // Test flag
             
             // Check for required parameters
             if (!cryptos)
@@ -128,8 +128,8 @@ class MetadataController
     {
         try
         {
-            const testFlag = req.query.test                                             // Test flag
-            const metadataId = req.query.metadataId                                     // Crypto metadata id
+            const testFlag = req.query.test                                 // Test flag
+            const metadataId = req.query.metadataId                         // Crypto metadata id
         
             // Check for required parameters
             if (!metadataId)

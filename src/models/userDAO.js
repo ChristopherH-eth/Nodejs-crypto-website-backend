@@ -45,12 +45,17 @@ class UserDAO
 
             if (!userExists)
             {
+                // Encrypt user password for storage
                 const encryptedPassword = await bcryptjs.hash(password, 10)
+
+                // Create new token for user
                 const token = jwt.sign(
                     {userId: email},
                     TOKEN_KEY,
                     {expiresIn: "1h"}
                 )
+
+                // User object to be added to database
                 const userDoc = {
                     firstName: firstName,
                     lastName: lastName,
@@ -59,6 +64,7 @@ class UserDAO
                     token: token
                 }
 
+                // Attempt to add new user to the database
                 const userResponse = await database.collection(collection).insertOne(userDoc)
 
                 // Return response and token
@@ -106,12 +112,14 @@ class UserDAO
             // Validate user credentials
             if (user && (await bcryptjs.compare(password, user.password)))
             {
+                // Create new token for user
                 const token = jwt.sign(
                     {userId: email},
                     TOKEN_KEY,
-                    {expiresIn: "1h"}
+                    {expiresIn: "24h"}
                 )
 
+                // Attempt to update a user's token
                 const userResponse = await database.collection(collection).updateOne(
                     {email: email},
                     {$set: {
@@ -159,8 +167,10 @@ class UserDAO
                 Logger.info("Checking user logged in status: " + req.cookies.user)
             }
 
+            // Attempt to find a user in the database by their token
             const user = await database.collection(collection).findOne({token: req.cookies.user})
 
+            // Check if we have a valid user and active session
             if (req.session === null && user)
                 return {error: "Session has expired, please login"}
             else if (!user)

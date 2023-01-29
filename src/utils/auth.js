@@ -22,6 +22,7 @@ async function verifyToken(req, res, next)
 
     try
     {
+        // Attempt to verify a user's token
         jwt.verify(token, TOKEN_KEY)
     }
     catch (e)

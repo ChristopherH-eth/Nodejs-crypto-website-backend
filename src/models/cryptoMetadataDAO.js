@@ -39,6 +39,7 @@ class CryptoMetaDAO
                 Logger.info("Inserting " + metaDoc.name + " at id: " + metaDoc.id)
             }
 
+            // Attempt to add new metadata
             const metadataResponse = await database.collection(collection).insertOne(metaDoc)
 
             // Return response
@@ -95,6 +96,7 @@ class CryptoMetaDAO
                 Logger.info("Updating metadata by id: " + metaDoc.id)
             }
 
+            // Attempt to update metadata
             const updateResponse = await database.collection(collection).updateOne(
                 {$or:
                     [
@@ -193,6 +195,7 @@ class CryptoMetaDAO
             // Iterate over the id array and find matching metadata objects to return
             for (var i = 0; i < cryptoArray.length; i++)
             {
+                // Attempt to lookup metadata by id
                 const metadataResponse = await database.collection(collection).findOne({
                     id: parseInt(cryptoArray[i])
                 })
@@ -252,6 +255,7 @@ class CryptoMetaDAO
                 Logger.info("Deleting metadata at id: " + metadataId)
             }
 
+            // Attempt to delete metadata
             const deleteResponse = await database.collection(collection).deleteOne({id: metadataId})
 
             // Return response

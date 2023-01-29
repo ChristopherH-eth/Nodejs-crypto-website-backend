@@ -1,7 +1,6 @@
 import CryptoDAO from "../models/cryptoDAO.js"
 import Logger from "../utils/logger.js"
 import { responseHandler } from "../utils/helpers.js"
-import { verifyToken } from "../utils/auth.js"
 
 /**
  * @file crypto-controller.js
@@ -256,7 +255,7 @@ class CryptoController
     {
         try
         {
-            const testFlag = req.query.test                                         // Test flag
+            const testFlag = req.query.test                                     // Test flag
 
             // Total number of cryptocurrency documents returned by getCryptoCount()
             const cryptoResponse = await CryptoDAO.getCryptoCount(testFlag)         

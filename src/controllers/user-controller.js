@@ -20,8 +20,8 @@ class UserController
     {
         try
         {
-            const testFlag = req.query.test
-            const {firstName, lastName, email, password} = req.body
+            const testFlag = req.query.test                                 // Test flag
+            const {firstName, lastName, email, password} = req.body         // User credentials/information
 
             // Check for required parameters
             if (!(firstName && lastName && email && password))
@@ -31,6 +31,7 @@ class UserController
                 return
             }
 
+            // Attempt to register a user
             const userResponse = await UserDAO.registerUser(
                 firstName, lastName, email.toLowerCase(), password, testFlag
             )
@@ -55,8 +56,8 @@ class UserController
     {
         try
         {
-            const testFlag = req.query.test
-            const {email, password} = req.body
+            const testFlag = req.query.test                             // Test flag
+            const {email, password} = req.body                          // User email and password
 
             // Check for required parameters
             if (!(email, password))
@@ -66,6 +67,7 @@ class UserController
                 return
             }
 
+            // Attempt to login a user
             const userResponse = await UserDAO.loginUser(email, password, testFlag)
 
             // Handle error responses
@@ -94,6 +96,9 @@ class UserController
     {
         try
         {
+            Logger.info("Logging out user and ending session: " + JSON.stringify(req.headers.cookie))
+
+            // End session and clear cookie in user's browser
             req.session = null
             res.clearCookie("user").json({message: "Cookie cleared"})
         }
