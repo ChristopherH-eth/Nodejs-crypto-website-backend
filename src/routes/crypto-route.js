@@ -1,8 +1,8 @@
 import express from "express"
 import { ENDPOINTS } from "../utils/config.js"
-import CryptoController from "../controllers/crypto-controller.js"
-import MetadataController from "../controllers/metadata-controller.js"
-import UserController from "../controllers/user-controller.js"
+import CryptoController from "../controllers/cryptoController.js"
+import MetadataController from "../controllers/metadataController.js"
+import UserController from "../controllers/userController.js"
 
 /**
  * @file crypto-route.js

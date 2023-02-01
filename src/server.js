@@ -1,4 +1,6 @@
 import express from "express"
+import path from "path"
+import { fileURLToPath } from "url"
 import cors from "cors"
 import cookieSession from "cookie-session"
 import cookieParser from "cookie-parser"
@@ -11,8 +13,12 @@ import Logger from "./utils/logger.js"
  * @brief This file handles the default route creation and server object instantiation.
  */
 
-const app = express()                                   // Express object
-const port = 8000                                       // Port to listen on
+const app = express()                                       // Express object
+const port = 8000                                           // Port to listen on
+const __filename = fileURLToPath(import.meta.url)           // Declare __filename to use with ES6
+const __dirname = path.dirname(__filename)                  // Declare __dirname to use with ES6
+
+
 
 // Define cors options
 app.use(cors({
@@ -20,6 +26,12 @@ app.use(cors({
     credentials: true
 }))
 app.use(express.json())
+
+// Set server default path to serve production build of front end
+app.use(express.static(path.join(__dirname, "client/build")))
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "client/build", 'index.html'));
+})
 
 // Define cookie settings
 app.set("trust proxy", 1)
