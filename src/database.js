@@ -52,10 +52,6 @@ async function connectToDBAndListen() {
             wtimeoutMS: 2500,
             useNewUrlParser: true
         })
-        .catch((err) => {
-            Logger.error(err.stack)
-            process.exit(1)
-        })
         .then((client) => {
             injectDB(client)
             Logger.info("Database connection open")
@@ -63,6 +59,10 @@ async function connectToDBAndListen() {
         .then(() => {
             // Start listening for requests
             startListening()
+        })
+        .catch((err) => {
+            Logger.error(err.stack)
+            process.exit(1)
         })
 }
 

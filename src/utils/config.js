@@ -45,7 +45,8 @@ const TEST_ENDPOINTS = {
     metadataById: `${ENDPOINTS.metadataById}?test=true`,
     cryptoById: `${ENDPOINTS.cryptoById}?test=true`,
     registerUser: `${ENDPOINTS.registerUser}?test=true`,
-    loginUser: `${ENDPOINTS.loginUser}?test=true`
+    loginUser: `${ENDPOINTS.loginUser}?test=true`,
+    cookies: `${ENDPOINTS.cookies}?test=true`
 }
 
 // Update intervals

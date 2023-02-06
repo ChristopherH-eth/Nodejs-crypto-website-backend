@@ -60,7 +60,7 @@ class UserController
             const {email, password} = req.body                          // User email and password
 
             // Check for required parameters
-            if (!(email, password))
+            if (!(email && password))
             {
                 res.status(400).json({error: "Missing required parameters"})
 
@@ -73,7 +73,10 @@ class UserController
             // Handle error responses
             if (!await responseHandler(res, userResponse))
             {
+                // Create user session
                 req.session.user = userResponse.token
+
+                // Set user cookie
                 res.status(200).cookie("user", req.session.user).json({
                     data: userResponse.response, 
                     firstName: userResponse.user
@@ -96,7 +99,12 @@ class UserController
     {
         try
         {
-            Logger.info("Logging out user and ending session: " + JSON.stringify(req.headers.cookie))
+            const testFlag = req.query.test                             // Test flag
+
+            if (testFlag)
+                Logger.test("Logging out user and ending session: " + JSON.stringify(req.headers.cookie))
+            else
+                Logger.info("Logging out user and ending session: " + JSON.stringify(req.headers.cookie))
 
             // End session and clear cookie in user's browser
             req.session = null
