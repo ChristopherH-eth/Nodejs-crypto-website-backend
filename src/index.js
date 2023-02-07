@@ -1,4 +1,4 @@
-import { connectToDBAndListen } from "./database.js"
+import { startListening } from "./server.js"
 
 /**
  * @file index.js
@@ -8,4 +8,4 @@ import { connectToDBAndListen } from "./database.js"
  */
 
 // Initialize the connection to the database and start listening for requests
-connectToDBAndListen()
+startListening()

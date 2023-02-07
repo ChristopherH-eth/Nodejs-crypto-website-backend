@@ -6,6 +6,8 @@ import cookieSession from "cookie-session"
 import cookieParser from "cookie-parser"
 import router from "./routes/crypto-route.js"
 import Logger from "./utils/logger.js"
+import { connectToDBAndListen } from "./database.js"
+import { setUpdateIntervals } from "./utils/update.js"
 
 /**
  * @file server.js
@@ -55,10 +57,16 @@ app.use("*", (req, res) => res.status(404).json({error: "Not found"}))
 /**
  * @brief The startListening() function tells the ExpressJS instance to start listening on a given port.
  */
-function startListening() 
+async function startListening() 
 {
     try
     {
+        // Connect to database and start internal services
+        await connectToDBAndListen()
+        await setUpdateIntervals()
+
+        Logger.info("Starting web server...")
+
         // Start listening for incoming requests
         app.listen(port, () => {
             Logger.info(`Web server listening on port ${port}`)

@@ -1,6 +1,5 @@
 import mongodb from "mongodb"
 import { MONGO_PASSWORD, MONGO_USERNAME } from "./utils/config.js"
-import { startListening } from "./server.js"
 import Logger from "./utils/logger.js"
 
 /**
@@ -53,12 +52,9 @@ async function connectToDBAndListen() {
             useNewUrlParser: true
         })
         .then((client) => {
+            Logger.info("Opening database connection...")
             injectDB(client)
             Logger.info("Database connection open")
-        })
-        .then(() => {
-            // Start listening for requests
-            startListening()
         })
         .catch((err) => {
             Logger.error(err.stack)

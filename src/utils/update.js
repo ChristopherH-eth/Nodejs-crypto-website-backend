@@ -14,15 +14,26 @@ import Logger from "./logger.js"
 // JSON response of the most recent CMC listing API call
 var cryptoData = {}
 
-// Automatically update cryptocurrency price data every hour
-const priceUpdater = setInterval(async () => {
-    await autoUpdateCryptos()
-}, UPDATE.hour)   // 1 hour
+/**
+ * @brief The setUpdateIntervals() function sets the intervals at which the server will fetch data from
+ *      third party sources to update the database.
+ */
+async function setUpdateIntervals()
+{
+    Logger.info("Initializing internal update intervals...")
 
-// Automatically update cryptocurrency metadata daily
-const metaUpdater = setInterval(async () => {
-    await autoUpdateMetadata()
-}, UPDATE.day)   // 1 day
+    // Automatically update cryptocurrency price data every hour
+    const priceUpdater = setInterval(async () => {
+        await autoUpdateCryptos()
+    }, UPDATE.hour)   // 1 hour
+
+    // Automatically update cryptocurrency metadata daily
+    const metaUpdater = setInterval(async () => {
+        await autoUpdateMetadata()
+    }, UPDATE.day)   // 1 day
+
+    Logger.info("Update intervals set")
+}
 
 /**
  * @brief The autoUpdateCryptos() function runs hourly to update the top 1000 cryptocurrencies by market
@@ -130,4 +141,4 @@ async function fetchMetadata()
         .then((response) => response.json())
 }
 
-export { fetchCryptoData, fetchMetadata, cryptoData }
+export { setUpdateIntervals, fetchCryptoData, fetchMetadata, cryptoData }
