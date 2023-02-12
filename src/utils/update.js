@@ -103,6 +103,7 @@ async function fetchCryptoData()
             }
         })
         .then((response) => response.json())
+        .catch(console.error)
 }
 
 /**
@@ -139,6 +140,7 @@ async function fetchMetadata()
             }
         })
         .then((response) => response.json())
+        .catch(console.error)
 }
 
 export { setUpdateIntervals, fetchCryptoData, fetchMetadata, cryptoData }
